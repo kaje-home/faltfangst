@@ -52,10 +52,15 @@ Pluginet bär med sig en databas, `data/lamningstyper.db`, och hämtar lämninga
 
 | Källa | Vad | Villkor |
 |---|---|---|
-| **Riksantikvarieämbetet** | *Lista med lämningstyper och antikvarisk praxis*, version 5.0 (2021): lämningstyper, egenskaper, definitioner, antikvarisk bedömning, Jfr-hänvisningar och "Avser inte"-satser. **Följer med pluginet** i bearbetad form. | Riksantikvarieämbetets text, återgiven ordagrant med källhänvisning. |
-| **Riksantikvarieämbetet** | *Exempelsamling*, version 1.0 (2008), del 2 av *Handledning för inventering och dokumentation av forn- och kulturlämningar för FMIS*: beskrivningsprinciper och färdiga beskrivningar per lämningstyp. **Följer med pluginet** i bearbetad form. | Riksantikvarieämbetets text, återgiven ordagrant med källhänvisning. |
+| **Riksantikvarieämbetet** | *Lista med lämningstyper och antikvarisk praxis*, version 5.0 (2021): lämningstyper, egenskaper, definitioner, antikvarisk bedömning, Jfr-hänvisningar och "Avser inte"-satser. **Följer med pluginet** i bearbetad form. | CC BY enligt Riksantikvarieämbetets villkor för raa.se. Dokumentet anger ingen egen licens. Källa: Riksantikvarieämbetet. Texten är återgiven ordagrant. |
+| **Riksantikvarieämbetet** | *Exempelsamling*, version 1.0 (2008), del 2 av *Handledning för inventering och dokumentation av forn- och kulturlämningar för FMIS*: beskrivningsprinciper och färdiga beskrivningar per lämningstyp. **Följer med pluginet** i bearbetad form. | CC BY enligt Riksantikvarieämbetets villkor för raa.se. Dokumentet anger ingen egen licens. Källa: Riksantikvarieämbetet. Texten är återgiven ordagrant. |
 | **Jamtli** | *Fälthandbok i arkeologisk inventering* 2.0 (2023): formregler för mått, uteslutningar och förtydliganden. **Följer med pluginet** i bearbetad form. | CC BY. Källa: Jamtli. |
 | **Riksantikvarieämbetet** | Öppna länsuttag ur Kulturmiljöregistret (KMR): registrerade lämningar med geometrier. Hämtas vid varje uttag, följer inte med pluginet. | Riksantikvarieämbetets öppna data. Se deras villkor. |
+
+Riksantikvarieämbetets villkor står på sidan [Upphovsrätt på raa.se](https://www.raa.se/om-riksantikvarieambetet/om-webbplatsen/upphovsratt-pa-raa-se/). De två dokumenten är hämtade från raa.se 2026-08-20:
+
+- Lämningstypslistan 5.0: <https://www.raa.se/app/uploads/2025/06/Lamningstypslistan-5.0.pdf>
+- Exempelsamlingen 1.0, red. Anna-Lena Olsson: <https://www.raa.se/app/uploads/2025/12/Exempelsamling-ver-1.0.pdf>
 
 `lamningstyper.db` är byggd ur de tre första källorna. Byggverktyget, som läser PDF-filerna, ingår inte i det här repot, så **databasen går inte att bygga om ur det som ligger här**. Vilken version av lämningstypslistan databasen bygger på står i *Fältfångst → Om Fältfångst …* och i varje uttags uppslagsbok.
 
