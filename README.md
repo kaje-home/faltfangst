@@ -52,8 +52,8 @@ Pluginet bär med sig en databas, `data/lamningstyper.db`, och hämtar lämninga
 
 | Källa | Vad | Villkor |
 |---|---|---|
-| **Riksantikvarieämbetet** | *Lista med lämningstyper och rekommenderad antikvarisk bedömning*, version 5.0: lämningstyper, egenskaper, definitioner, rekommenderad bedömning, Jfr-hänvisningar och "Avser inte"-satser. **Följer med pluginet** i bearbetad form. | Riksantikvarieämbetets text, återgiven ordagrant med källhänvisning. |
-| **Riksantikvarieämbetet** | *Exempelsamling* 1.0 (2008): beskrivningsprinciper och färdiga beskrivningar per lämningstyp. **Följer med pluginet** i bearbetad form. | Riksantikvarieämbetets text, återgiven ordagrant med källhänvisning. |
+| **Riksantikvarieämbetet** | *Lista med lämningstyper och antikvarisk praxis*, version 5.0 (2021): lämningstyper, egenskaper, definitioner, antikvarisk bedömning, Jfr-hänvisningar och "Avser inte"-satser. **Följer med pluginet** i bearbetad form. | Riksantikvarieämbetets text, återgiven ordagrant med källhänvisning. |
+| **Riksantikvarieämbetet** | *Exempelsamling*, version 1.0 (2008), del 2 av *Handledning för inventering och dokumentation av forn- och kulturlämningar för FMIS*: beskrivningsprinciper och färdiga beskrivningar per lämningstyp. **Följer med pluginet** i bearbetad form. | Riksantikvarieämbetets text, återgiven ordagrant med källhänvisning. |
 | **Jamtli** | *Fälthandbok i arkeologisk inventering* 2.0 (2023): formregler för mått, uteslutningar och förtydliganden. **Följer med pluginet** i bearbetad form. | CC BY. Källa: Jamtli. |
 | **Riksantikvarieämbetet** | Öppna länsuttag ur Kulturmiljöregistret (KMR): registrerade lämningar med geometrier. Hämtas vid varje uttag, följer inte med pluginet. | Riksantikvarieämbetets öppna data. Se deras villkor. |
 
