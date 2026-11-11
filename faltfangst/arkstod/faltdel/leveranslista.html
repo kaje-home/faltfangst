@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<title>Leveranslista — {namn}</title>
+<style>
+  :root {{
+    --ram: #d8d4cc; --tag: #6b6459; --varning: #a01818; --varningsyta: #fdf0f0;
+    --mjuk: #6b6459; --mjukyta: #f5f3ee;
+    --klar: #f4f6f3; --papper: #fff; --bakgrund: #edeae4;
+  }}
+  * {{ box-sizing: border-box; }}
+  body {{
+    margin: 0; padding: 1.5rem; background: var(--bakgrund);
+    font: 15px/1.55 "Segoe UI", system-ui, sans-serif; color: #23201c;
+  }}
+  header, section, footer {{ max-width: 62rem; margin-left: auto; margin-right: auto; }}
+  h1 {{ font-size: 1.3rem; margin: 0 0 .3rem; }}
+  .meta {{ color: var(--tag); font-size: .87rem; }}
+  .rakning {{
+    display: inline-block; margin-top: .6rem; padding: .3rem .7rem;
+    background: var(--papper); border: 1px solid var(--ram); border-radius: 3px;
+    font-variant-numeric: tabular-nums;
+  }}
+  #lagring {{
+    margin-top: .6rem; padding: .4rem .7rem; border-radius: 3px;
+    font-size: .87rem; display: none;
+  }}
+  #lagring.varning {{
+    display: block; background: var(--varningsyta);
+    border-left: 3px solid var(--varning); color: var(--varning);
+  }}
+  h2 {{
+    font-size: .82rem; text-transform: uppercase; letter-spacing: .09em;
+    color: var(--tag); margin: 1.8rem 0 .6rem; font-weight: 600;
+  }}
+  article {{
+    background: var(--papper); border: 1px solid var(--ram); border-radius: 4px;
+    margin-bottom: .9rem; overflow: hidden;
+  }}
+  article.klar {{ background: var(--klar); opacity: .55; }}
+  .topp {{
+    display: flex; align-items: baseline; gap: .7rem; padding: .6rem .9rem;
+    border-bottom: 1px solid var(--ram); background: #faf9f7;
+  }}
+  .topp input {{ width: 1.05rem; height: 1.05rem; }}
+  .nr {{ font-weight: 700; font-variant-numeric: tabular-nums; }}
+  .typ {{ color: var(--tag); }}
+  .tid {{ margin-left: auto; color: var(--tag); font-size: .85rem; }}
+  .fornsok {{
+    color: var(--tag); font-size: .82rem; text-decoration: none;
+    border: 1px solid var(--ram); border-radius: 3px; padding: .1rem .45rem;
+  }}
+  .fornsok:hover {{ background: #f3f1ed; color: #23201c; }}
+  .falt {{
+    display: grid; grid-template-columns: 16rem 1fr auto; gap: .5rem .9rem;
+    align-items: start; padding: .45rem .9rem; border-top: 1px solid #f1eeea;
+  }}
+  .namn {{ color: var(--tag); font-size: .87rem; padding-top: .12rem; }}
+  .varde {{
+    white-space: pre-wrap; padding: .1rem .35rem; margin: -.1rem -.35rem;
+    border: 1px solid transparent; border-radius: 3px; min-height: 1.4em;
+  }}
+  .varde:hover {{ border-color: var(--ram); }}
+  .varde:focus {{
+    outline: none; border-color: var(--raa, #2f4858); background: #fbfaf8;
+  }}
+  /* Tom ruta maste anda ga att klicka i, sa texten ligger i CSS och inte i
+     rutan -- annars hade "- tom -" blivit vardet man skrev efter. */
+  .varde:empty::before {{
+    content: "— tom —"; color: #b4ada2; font-style: italic;
+  }}
+  .varde:empty:focus::before {{ content: ""; }}
+  select.varde {{
+    font: inherit; background: #fff; border-color: var(--ram);
+    max-width: 100%; margin: 0;
+  }}
+  .falt.andrad {{ background: #fbf7ea; }}
+  .falt.andrad .varde {{ border-color: #c9a227; background: #fffdf5; }}
+  .fore {{ display: none; }}
+  .falt.andrad .fore {{
+    display: block; grid-column: 2 / -1; margin-top: .25rem;
+    color: var(--tag); font-size: .82rem;
+  }}
+  .fore s {{ color: #a09788; }}
+  #rattelser {{
+    display: none; position: sticky; bottom: 0; z-index: 4;
+    max-width: 62rem; margin: 1rem auto 0; padding: .6rem .9rem;
+    background: #fbf7ea; border: 1px solid #c9a227; border-radius: 4px;
+    align-items: center; gap: .8rem;
+  }}
+  #rattelser.syns {{ display: flex; }}
+  #rattelser b {{ font-variant-numeric: tabular-nums; }}
+  #rattelser .hjalp {{ color: var(--tag); font-size: .84rem; }}
+  #rattelser button {{ margin-left: auto; font-size: .87rem; padding: .3rem .8rem; }}
+  button {{
+    font: inherit; font-size: .8rem; padding: .16rem .6rem; cursor: pointer;
+    border: 1px solid var(--ram); background: #fff; border-radius: 3px;
+    color: var(--tag);
+  }}
+  button:hover {{ background: #f3f1ed; }}
+  button.kopierad {{ background: #e8f2e6; border-color: #a9c9a2; color: #2f6127; }}
+  .anm {{
+    grid-column: 2 / -1; margin-top: .3rem; padding: .35rem .6rem;
+    background: var(--varningsyta); border-left: 3px solid var(--varning);
+    color: var(--varning); font-size: .87rem;
+  }}
+  .anm.mjuk {{
+    background: var(--mjukyta); border-left-color: #ccc5b8; color: var(--mjuk);
+  }}
+  .privat {{
+    grid-column: 1 / -1; padding: .4rem .6rem; background: #f7f5f1;
+    border-left: 3px solid #ccc5b8; color: var(--tag); font-size: .87rem;
+  }}
+  footer {{ margin-top: 2rem; color: var(--tag); font-size: .85rem; }}
+  .rakning-detalj {{
+    margin-top: .6rem; padding: .6rem .8rem; background: var(--papper);
+    border: 1px solid var(--ram); border-radius: 4px;
+    font-size: .9rem; line-height: 1.7;
+  }}
+  .rakning-detalj div {{ color: var(--tag); }}
+  .delar {{
+    margin: .4rem 0 0; padding: .5rem .7rem; background: var(--mjukyta);
+    border: 1px solid var(--ram); border-radius: 4px; font-size: .9rem;
+  }}
+  .delar summary {{ cursor: pointer; color: var(--mjuk); }}
+  .delar ul {{ margin: .5rem 0 0; padding-left: 1.2rem; }}
+  .delar li {{ margin-bottom: .3rem; }}
+</style>
+</head>
+<body>
+<header>
+  <h1>Leveranslista — {namn}</h1>
+  <div class="meta">
+    {antal} lämningar att registrera · uttag ur RAÄ {uttagsdatum} ·
+    listan skapad {skapad}
+  </div>
+  <div class="rakning"><b id="klara">0</b> av <b>{antal}</b> registrerade</div>
+  {sammanrakning}
+  <div id="lagring"></div>
+</header>
+
+<section>
+{avsnitt}
+</section>
+
+<div id="rattelser">
+  <span><b id="antal_rattelser">0</b> rättelser är inte inskrivna i arbetsfilen</span>
+  <span class="hjalp">Spara filen och läs in den i QGIS: <i>Skriv in rättelser</i></span>
+  <button type="button" onclick="sparaRattelser()">Spara ändringar …</button>
+</div>
+
+<footer>
+  Anmärkningarna säger att en text avviker från handbokens form, inte att något
+  är fel i sak. Det avgör den som var på platsen.<br>
+  Urvalet är de lämningar som skiljer sig från uttaget, plus de som registrerats
+  lokalt. Egna anteckningar är gråmarkerade och går inte till Fornreg.<br>
+  Ser du ett fel går det att rätta här. Rättelsen når Fornreg när du klistrar
+  in den, men arbetsfilen först när du skrivit in ändringarna i QGIS.
+</footer>
+
+<script>
+const NYCKEL = "{nyckel}";
+
+function varde(ruta) {{
+  return ruta.tagName === "SELECT" ? ruta.value : ruta.innerText;
+}}
+
+function kopiera(knapp) {{
+  const ruta = knapp.parentElement.querySelector(".varde");
+  const text = varde(ruta);
+  const klart = () => {{
+    knapp.textContent = "Kopierad";
+    knapp.classList.add("kopierad");
+    setTimeout(() => {{
+      knapp.textContent = "Kopiera";
+      knapp.classList.remove("kopierad");
+    }}, 1200);
+  }};
+  // Urklippet via navigator kraver saker kontext och ar inte alltid tillatet
+  // for en fil oppnad fran disk. Den aldre vagen fungerar dar, och anvands
+  // som reserv.
+  if (navigator.clipboard && window.isSecureContext) {{
+    navigator.clipboard.writeText(text).then(klart, () => reserv(text, klart));
+  }} else {{
+    reserv(text, klart);
+  }}
+}}
+
+function reserv(text, klart) {{
+  const ruta = document.createElement("textarea");
+  ruta.value = text;
+  ruta.style.position = "fixed";
+  ruta.style.opacity = "0";
+  document.body.appendChild(ruta);
+  ruta.select();
+  try {{ document.execCommand("copy"); klart(); }} catch (e) {{}}
+  ruta.remove();
+}}
+
+// Lagringen provas i stallet for att antas. En webblasare som oppnar en fil
+// fran disk far ibland inte spara nagot, och da ska sidan saga det i stallet
+// for att tappa laget nasta morgon.
+const lagring = (() => {{
+  try {{
+    localStorage.setItem(NYCKEL + ":prov", "1");
+    localStorage.removeItem(NYCKEL + ":prov");
+    return localStorage;
+  }} catch (e) {{
+    return null;
+  }}
+}})();
+
+function las() {{
+  if (!lagring) return [];
+  try {{ return JSON.parse(lagring.getItem(NYCKEL) || "[]"); }} catch (e) {{ return []; }}
+}}
+
+function spara(klara) {{
+  if (!lagring) return;
+  try {{ lagring.setItem(NYCKEL, JSON.stringify(klara)); }} catch (e) {{}}
+}}
+
+function vaxla(ruta) {{
+  const post = ruta.closest("article");
+  post.classList.toggle("klar", ruta.checked);
+  spara(
+    [...document.querySelectorAll("article.klar")].map(a => a.dataset.nyckel)
+  );
+  rakna();
+}}
+
+function rakna() {{
+  document.getElementById("klara").textContent =
+    document.querySelectorAll("article.klar").length;
+}}
+
+// --- Rattelser -------------------------------------------------------
+//
+// En HTML-sida kan inte skriva i en GeoPackage. Rattelsen halls darfor kvar
+// har -- i lagringen, sa att den overlever att sidan stangs -- och lamnas
+// vidare som en fil som QGIS laser in.
+//
+// Sidan far aldrig se ut som om rattelsen redan natt arbetsfilen. Darfor
+// listen langst ned: den star kvar sa lange nagot ar oskrivet.
+
+const RATTNYCKEL = NYCKEL + ":rattelser";
+
+function lasRattelser() {{
+  if (!lagring) return {{}};
+  try {{ return JSON.parse(lagring.getItem(RATTNYCKEL) || "{{}}"); }}
+  catch (e) {{ return {{}}; }}
+}}
+
+function sparaLage(rattelser) {{
+  if (!lagring) return;
+  try {{ lagring.setItem(RATTNYCKEL, JSON.stringify(rattelser)); }} catch (e) {{}}
+}}
+
+function rutnyckel(ruta) {{
+  const post = ruta.closest("article");
+  return post.dataset.tabell + ":" + post.dataset.fid + ":" + ruta.dataset.kolumn;
+}}
+
+function markera(ruta) {{
+  const falt = ruta.closest(".falt");
+  const ursprung = ruta.dataset.ursprung;
+  const nu = varde(ruta);
+  const andrad = nu !== ursprung;
+  falt.classList.toggle("andrad", andrad);
+  falt.querySelector(".fore").innerHTML = andrad
+    ? "stod: <s></s>"
+    : "";
+  if (andrad) {{
+    // textContent, inte innerHTML: vardet ar text ur arbetsfilen och ska
+    // aldrig tolkas som markup.
+    falt.querySelector(".fore s").textContent = ursprung || "tomt";
+  }}
+  return andrad;
+}}
+
+function andrad(ruta) {{
+  const rattelser = lasRattelser();
+  const nyckel = rutnyckel(ruta);
+  if (markera(ruta)) {{
+    rattelser[nyckel] = varde(ruta);
+  }} else {{
+    delete rattelser[nyckel];
+  }}
+  sparaLage(rattelser);
+  raknaRattelser();
+}}
+
+function raknaRattelser() {{
+  const antal = document.querySelectorAll(".falt.andrad").length;
+  document.getElementById("antal_rattelser").textContent = antal;
+  document.getElementById("rattelser").classList.toggle("syns", antal > 0);
+}}
+
+function byggRattelser() {{
+  const andringar = [];
+  for (const falt of document.querySelectorAll(".falt.andrad")) {{
+    const ruta = falt.querySelector(".varde");
+    const post = ruta.closest("article");
+    andringar.push({{
+      tabell: post.dataset.tabell,
+      fid: Number(post.dataset.fid),
+      kolumn: ruta.dataset.kolumn,
+      fran: ruta.dataset.ursprung,
+      till: varde(ruta)
+    }});
+  }}
+  return andringar;
+}}
+
+function sparaRattelser() {{
+  const andringar = byggRattelser();
+  const fil = new Blob(
+    [JSON.stringify({{
+      arbetsfil: "lamningar.gpkg",
+      lista: NYCKEL,
+      skapad: new Date().toISOString().slice(0, 16),
+      andringar: andringar
+    }}, null, 2)],
+    {{ type: "application/json" }}
+  );
+  const lank = document.createElement("a");
+  lank.href = URL.createObjectURL(fil);
+  lank.download = "leveransandringar.json";
+  document.body.appendChild(lank);
+  lank.click();
+  lank.remove();
+  setTimeout(() => URL.revokeObjectURL(lank.href), 5000);
+}}
+
+window.addEventListener("DOMContentLoaded", () => {{
+  const besked = document.getElementById("lagring");
+  if (!lagring) {{
+    besked.className = "varning";
+    besked.textContent =
+      "Webbläsaren tillåter inte att läget sparas för en fil som öppnats " +
+      "från disk. Kryssen försvinner när sidan stängs. Prova en annan " +
+      "webbläsare, eller håll fliken öppen tills leveransen är klar.";
+  }} else {{
+    for (const nyckel of las()) {{
+      const post = document.querySelector(`article[data-nyckel="${{nyckel}}"]`);
+      if (post) {{
+        post.classList.add("klar");
+        post.querySelector("input").checked = true;
+      }}
+    }}
+
+    // Sparade rattelser laggs tillbaka. En rattelse vars varde arbetsfilen
+    // redan har ar inskriven -- den slapps, sa att listen slocknar av sig
+    // sjalv nasta gaang listan skrivs ut.
+    const rattelser = lasRattelser();
+    let kvar = {{}};
+    for (const [nyckel, till] of Object.entries(rattelser)) {{
+      const [tabell, fid, kolumn] = nyckel.split(":");
+      const ruta = document.querySelector(
+        `article[data-tabell="${{tabell}}"][data-fid="${{fid}}"] `
+        + `.varde[data-kolumn="${{kolumn}}"]`
+      );
+      if (!ruta || ruta.dataset.ursprung === till) continue;
+      if (ruta.tagName === "SELECT") {{ ruta.value = till; }}
+      else {{ ruta.textContent = till; }}
+      markera(ruta);
+      kvar[nyckel] = till;
+    }}
+    sparaLage(kvar);
+  }}
+
+  for (const ruta of document.querySelectorAll(".varde")) {{
+    // Fri text provas nar rutan lamnas, rullistan direkt vid valet.
+    if (ruta.tagName === "SELECT") {{
+      ruta.addEventListener("change", () => andrad(ruta));
+    }} else {{
+      ruta.addEventListener("blur", () => andrad(ruta));
+      // Radbrytning i en beskrivning ar riktig text; Enter ska inte skapa
+      // <div> som webblasaren annars gor i en contenteditable.
+      ruta.addEventListener("paste", (h) => {{
+        h.preventDefault();
+        const text = (h.clipboardData || window.clipboardData).getData("text");
+        document.execCommand("insertText", false, text);
+      }});
+    }}
+  }}
+
+  rakna();
+  raknaRattelser();
+}});
+</script>
+</body>
+</html>

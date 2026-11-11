@@ -1,0 +1,36 @@
+[general]
+name=Fältfångst
+qgisMinimumVersion=3.40
+qgisMaximumVersion=4.99
+description=Fristående tillägg (inte från Riksantikvarieämbetet): hämtar Riksantikvarieämbetets länsuttag över registrerade lämningar och gör i ordning ett fältprojekt med blankett, uppslag och leveranslista inför registreringen i Fornreg.
+about=Fristående tillägg, inte från Riksantikvarieämbetet eller någon annan myndighet.
+    BETAVERSION — prövad i skarpa uppdrag i Jämtland, men inte bred nog för att kallas färdig. Räkna med att något ändras mellan versioner, och kontrollera alltid det som ska till Fornreg.
+    Väljer län — två när arbetet går över länsgränsen — hämtar uttaget från Riksantikvarieämbetet, bygger ut det och öppnar projektet. Ett uttag hör till ett arbete och får en egen mapp — verktyget rör aldrig en uppsättning någon redan arbetat i. Formuläret slår upp beskrivningsprincip och färdiga exempel ur Exempelsamlingen, listans egna Avser inte-satser och fälthandbokens uteslutningar, och säger när dateringen måste motiveras. Leveranslistan visar vad jobbet ändrat, i den ordning Fornreg frågar efter det.
+    Det räknar och det föreslår. Det avgör aldrig: bedömningen är inventerarens.
+    Hör ihop med pluginet Arkeologiskt inventeringsunderlag, som gör i ordning höjdmodell, skuggbilder och kartor över arbetsområdet. De två fungerar var för sig.
+    Den som har en äldre Fältfångst installerad under mappnamnet arkstod_falt (version 1.4.6 eller äldre) ska avinstallera den först. De två kan inte vara installerade samtidigt. Arbetsmappar och inställningar fungerar som förut.
+    Fri programvara under GNU GPL version 2 eller senare. Du får använda,
+    ändra och sprida den vidare; sprider du den vidare ska källkoden följa
+    med. Se filen LICENSE.
+version=1.4.7
+author=Karl-Johan Olofsson
+email=kaje@bahnhof.se
+tracker=https://github.com/kaje-home/faltfangst/issues
+repository=https://github.com/kaje-home/faltfangst
+homepage=https://github.com/kaje-home/faltfangst
+changelog=1.4.7 (2026-11-11)
+    - Första offentliga utgåvan. Pluginmappen heter faltfangst (hette arkstod_falt). Avinstallera den gamla först; arbetsmappar och inställningar fungerar som förut.
+    - Fungerar i QGIS 4 (Qt 6). Kräver QGIS 3.40 eller nyare.
+    - Ett nytt uttag öppnar zoomat till det valda länets lämningar.
+    - Se CHANGELOG.md på pluginets sida för allt.
+experimental=True
+; QGIS 4 (Qt 6). Koden anvander bara skrivsatt som finns i bade Qt 5 och
+; Qt 6: fullt utskrivna uppraknade varden (QDialog.DialogCode.Accepted) och
+; exec() i stallet for exec_(). Utan qgisMaximumVersion tolkar QGIS 4
+; pluginet som 3.x-bara. 3.40 ar golvet eftersom inget aldre ar provat.
+supportsQt6=True
+license=GPL-2.0-or-later
+deprecated=False
+tags=archaeology,sweden,arkeologi,inventering,utredning,fornlämningar,kulturmiljöregistret,KMR,fornreg,fornsök,riksantikvarieämbetet,fältarbete
+icon=icon.png
+category=Plugins

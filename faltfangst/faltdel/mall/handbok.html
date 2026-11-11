@@ -1,0 +1,982 @@
+<title>Fältfångstens handbok</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+
+<style>
+  :root {
+    /* Samma papper som bruksanvisningen: topografiska kartans neutral med
+       grön dragning, höjdkurvans brun som accent. */
+    --ground: #eef1ea;
+    --surface: #fbfcf9;
+    --ink: #191e19;
+    --muted: #5a655b;
+    --hairline: #d3d9cf;
+    --accent: #7a5230;
+    --accent-soft: #ede2d5;
+    --focus: #2f5d7c;
+
+    /* Källornas nivå, som en enda ton i fyra steg. En kulörskillnad ensam
+       överlever inte en utskrift i gråskala; en ljushetsskillnad gör det. */
+    --bindande: #39432f;
+    --normerande: #64705a;
+    --tolkande: #93a088;
+    --regional: #b9c4ac;
+    --niva-text: #fbfcf9;
+    --regional-text: #191e19;
+
+    --matt: 36rem;
+  }
+
+  :root:not([data-theme="light"]) { color-scheme: light dark; }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #14170f;
+      --surface: #1c2019;
+      --ink: #e8ebe2;
+      --muted: #9aa497;
+      --hairline: #333a30;
+      --accent: #cf9b64;
+      --accent-soft: #2c2418;
+      --focus: #8ec3e6;
+      --bindande: #dfe6d3;
+      --normerande: #aab89c;
+      --tolkande: #7d8a71;
+      --regional: #58634d;
+      --niva-text: #14170f;
+      --regional-text: #e8ebe2;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground: #14170f;
+    --surface: #1c2019;
+    --ink: #e8ebe2;
+    --muted: #9aa497;
+    --hairline: #333a30;
+    --accent: #cf9b64;
+    --accent-soft: #2c2418;
+    --focus: #8ec3e6;
+    --bindande: #dfe6d3;
+    --normerande: #aab89c;
+    --tolkande: #7d8a71;
+    --regional: #58634d;
+    --niva-text: #14170f;
+    --regional-text: #e8ebe2;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+    font-size: 1.02rem;
+    line-height: 1.62;
+  }
+
+  h1, h2, h3 {
+    font-family: Newsreader, Georgia, "Times New Roman", serif;
+    font-weight: 600;
+    text-wrap: balance;
+    margin: 0;
+  }
+
+  h1 { font-size: clamp(2rem, 4.5vw, 2.9rem); line-height: 1.1; }
+  h2 { font-size: 1.5rem; line-height: 1.2; }
+
+  h3 {
+    font-size: 1.06rem;
+    font-family: "Atkinson Hyperlegible", system-ui, sans-serif;
+    font-weight: 700;
+  }
+
+  p, ul, ol, dl { margin: 0; }
+  ul, ol { padding-left: 1.2rem; }
+  li { margin-bottom: 0.3rem; }
+
+  a { color: var(--focus); }
+  a:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+  code, .falt {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 0.88em;
+  }
+
+  .falt {
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: 2px;
+    padding: 0.08em 0.36em;
+    white-space: nowrap;
+  }
+
+  /* --- Uppslaget: innehållsräls och textspalt ------------------------- */
+
+  .uppslag {
+    display: grid;
+    grid-template-columns: 13rem minmax(0, 1fr);
+    gap: 0 3.5rem;
+    max-width: 60rem;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 6rem;
+    align-items: start;
+  }
+
+  .rals { position: sticky; top: 2rem; font-size: 0.9rem; }
+  .rals ol { list-style: none; padding: 0; margin: 0; }
+  .rals li { margin-bottom: 0.42rem; }
+
+  .rals a {
+    text-decoration: none;
+    color: var(--muted);
+    display: block;
+    border-left: 2px solid var(--hairline);
+    padding-left: 0.7rem;
+  }
+
+  .rals a:hover { color: var(--accent); border-left-color: var(--accent); }
+
+  .spalt { display: flex; flex-direction: column; gap: 3.2rem; }
+
+  header { display: flex; flex-direction: column; gap: 1rem; }
+
+  .etikett {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 0.76rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .ingress { font-size: 1.1rem; max-width: var(--matt); }
+
+  section { display: flex; flex-direction: column; gap: 1rem; }
+  section p, section ul, section ol { max-width: var(--matt); }
+
+  section > h2 {
+    border-bottom: 1px solid var(--hairline);
+    padding-bottom: 0.5rem;
+  }
+
+  /* --- Regeluppslagen ------------------------------------------------- */
+
+  .regler { display: flex; flex-direction: column; }
+
+  .regel {
+    display: grid;
+    grid-template-columns: minmax(0, 11rem) minmax(0, 1fr);
+    gap: 0.15rem 1.4rem;
+    padding: 0.95rem 0;
+    border-top: 1px solid var(--hairline);
+  }
+
+  .regel:last-child { border-bottom: 1px solid var(--hairline); }
+
+  .regel dt {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.84rem;
+    font-weight: 500;
+    color: var(--accent);
+    line-height: 1.5;
+  }
+
+  .regel dd { margin: 0; }
+  .regel .kalla { grid-column: 2; color: var(--muted); font-size: 0.88rem; }
+
+  .niva {
+    display: inline-block;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--niva-text);
+    background: var(--tolkande);
+    /* Nivaskalan ar fyra steg i en ton, och den ar till for att kunna
+       lasas. Skrivaren ska darfor trycka bottnarna och inte spara black. */
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+    border-radius: 2px;
+    padding: 0.05em 0.4em;
+    margin-right: 0.45em;
+    vertical-align: 0.08em;
+  }
+
+  .niva.bindande { background: var(--bindande); }
+  .niva.normerande { background: var(--normerande); }
+  .niva.regional { background: var(--regional); color: var(--regional-text); }
+
+  /* --- Rutor, citat, exempel ------------------------------------------ */
+
+  .ruta {
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-left: 3px solid var(--accent);
+    border-radius: 2px;
+    padding: 1rem 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    max-width: var(--matt);
+  }
+
+  .ruta p { max-width: none; }
+
+  blockquote {
+    margin: 0;
+    padding-left: 1.1rem;
+    border-left: 2px solid var(--accent-soft);
+    font-family: Newsreader, Georgia, serif;
+    font-size: 1.05rem;
+    font-style: italic;
+    color: var(--muted);
+    max-width: var(--matt);
+  }
+
+  .exempel {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.82rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: 2px;
+    padding: 0.85rem 1rem;
+    overflow-x: auto;
+  }
+
+  .tabellyta { overflow-x: auto; }
+
+  table { border-collapse: collapse; font-size: 0.92rem; width: 100%; }
+
+  th, td {
+    text-align: left;
+    padding: 0.45rem 0.9rem 0.45rem 0;
+    border-bottom: 1px solid var(--hairline);
+    vertical-align: top;
+  }
+
+  th {
+    font-size: 0.74rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  td.tal { font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+  footer {
+    padding-top: 1.4rem;
+    border-top: 1px solid var(--hairline);
+    color: var(--muted);
+    font-size: 0.92rem;
+    max-width: var(--matt);
+  }
+
+  @media (max-width: 62rem) {
+    .uppslag { grid-template-columns: minmax(0, 1fr); gap: 2.4rem; }
+    .rals { position: static; }
+    .rals ol {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+      gap: 0.3rem 1rem;
+    }
+    .regel { grid-template-columns: minmax(0, 1fr); gap: 0.2rem; }
+    .regel .kalla { grid-column: 1; }
+  }
+
+  @media print {
+    body { background: #fff; color: #000; font-size: 10.5pt; }
+    .rals { display: none; }
+    .uppslag { display: block; max-width: none; padding: 0; }
+    .spalt { gap: 1.8rem; }
+    h2 { break-after: avoid; }
+    .regel, .ruta, blockquote, .exempel { break-inside: avoid; }
+    a { color: #000; text-decoration: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+
+<div class="uppslag">
+
+<nav class="rals" aria-label="Innehåll">
+  <ol>
+    <li><a href="#stallning">Verktygets ställning</a></li>
+    <li><a href="#uppsattning">Uppsättningen</a></li>
+    <li><a href="#blanketten">Blanketten</a></li>
+    <li><a href="#reglerna">Reglerna</a></li>
+    <li><a href="#form">Beskrivningens form</a></li>
+    <li><a href="#geometri">Geometrin</a></li>
+    <li><a href="#sammansatt">Sammansatta lämningar</a></li>
+    <li><a href="#leverans">Leveransen</a></li>
+    <li><a href="#kallor">Källorna</a></li>
+    <li><a href="#granser">Gränserna</a></li>
+  </ol>
+</nav>
+
+<div class="spalt">
+
+<header>
+  <div class="etikett">Handbok · fördjupning</div>
+  <h1>Fältfångstens handbok</h1>
+  <p class="ingress">Bruksanvisningen visar hur du arbetar. Den här visar vad
+  verktyget vet: varje regel det tillämpar, var regeln kommer ifrån, och var
+  gränsen går mellan det verktyget avgör och det du avgör.</p>
+</header>
+
+<section id="stallning">
+  <h2>Verktygets ställning</h2>
+  <p>Verktyget räknar och det föreslår. Det avgör aldrig. Skillnaden är inte
+  blygsamhet utan en arbetsfördelning: antal, avstånd, mått, datum och
+  löpnummer är sådant en dator gör bättre än en människa som är trött och
+  blöt. Om en lämning uppfyller kulturmiljölagens rekvisit gör den det inte.</p>
+  <p>Det får en följd som går igen överallt i det som följer. När verktyget
+  <b>sätter</b> ett värde är det för att en handledning säger att värdet följer
+  av något annat du redan valt — inte för att verktyget bedömt något. När det
+  <b>säger ifrån</b> gäller det formen: en förkortning, en decimal, en
+  geometrisort. Och när det <b>frågar</b> — är det här samma lämning som
+  L1979:5481? — är frågan verkligen en fråga.</p>
+  <div class="ruta">
+    <h3>Källans nivå får aldrig suddas ut</h3>
+    <p>Varje besked bär sin källa, och källan bär sin nivå. Det är skillnad på
+    en föreskrift och en erfarenhet, och den skillnaden ska synas. Nivåerna
+    märks genomgående här:</p>
+    <p><span class="niva bindande">bindande</span> lag och förordning ·
+    <span class="niva normerande">normerande</span> myndighetsföreskrift ·
+    <span class="niva">tolkande</span> vägledning och handledning ·
+    <span class="niva regional">regional</span> länets egen tillämpning</p>
+  </div>
+</section>
+
+<section id="uppsattning">
+  <h2>Uppsättningen</h2>
+  <p>Ett uttag hämtar hem länets registrerade lämningar från
+  Riksantikvarieämbetet och gör i ordning en arbetsmapp. Mappen är en enhet
+  och fungerar utan uppkoppling.</p>
+  <div class="tabellyta">
+    <table>
+      <thead>
+        <tr><th>Fil</th><th>Vad den är</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="falt">.qgz</span></td><td>Projektet. Lagerordning, stilar, koppling till blanketten.</td></tr>
+        <tr><td><span class="falt">.gpkg</span></td><td>Arbetsfilen. Länets lämningar, dina egna, och lämningstypslistan som <span class="falt">ark_</span>-tabeller.</td></tr>
+        <tr><td><span class="falt">.ui</span></td><td>Blanketten, anpassad efter länets egen text.</td></tr>
+        <tr><td><span class="falt">uppslagsbok.html</span></td><td>Hela lämningstypslistan att läsa, med sökruta.</td></tr>
+        <tr><td><span class="falt">bruksanvisning.html</span></td><td>Kom-igång-anvisningen.</td></tr>
+        <tr><td><span class="falt">handbok.html</span></td><td>Den här sidan.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="ruta">
+    <h3>Ett uttag är engångsvara</h3>
+    <p>Arbetsmappen bär sin egen blankett, sitt eget projekt och sin egen
+    kopia av lämningstypslistan. En gammal mapp fortsätter därför bete sig på
+    det gamla sättet hur ny pluginen än är — det finns ingen väg att uppgradera
+    en mapp i efterhand, och det är med flit.</p>
+    <p>Rutinen är att installera om pluginet <em>och</em> göra ett nytt uttag.
+    Ett påbörjat jobb avslutas i den mapp det började i.</p>
+  </div>
+  <h3>Blanketten räknas ut ur länets egen text</h3>
+  <p>Textrutornas höjder är inte gissade. Vid uttaget mäts hur långa länets
+  befintliga beskrivningar, terrängangivelser och orienteringar faktiskt är,
+  och rutorna får den höjd som rymmer nio av tio texter utan att man behöver
+  rulla. Orienteringar är korta och beskrivningar långa — hur mycket de
+  skiljer sig är en fråga om länet, inte om smak.</p>
+  <p>Bredden mäts däremot en gång och står som konstant: hur många tecken som
+  ryms på en rad beror på layouten och inte på datan. Talen mäts om när
+  blanketten byter typsnitt.</p>
+</section>
+
+<section id="blanketten">
+  <h2>Blanketten</h2>
+  <p>Fem flikar, i arbetets ordning. <b>Lämningen</b> — typ och beskrivning.
+  <b>Bedömning</b> — de fyra valen till vänster (bedömning,
+  undersökningsstatus, registreringsstatus, skador), blankettens besked
+  bredvid dem, och under dem det man ibland skriver: motivering, kommentar,
+  skadebeskrivning. <b>Platsen</b> —
+  namn, tradition, orientering, terräng, vegetation. <b>Administrativt</b> —
+  löpnummer, datum, mätmetod, karta, egen anteckning. <b>Uppslag</b> —
+  exempel och måttregler för vald typ.</p>
+  <p>Platsen samlar de fält man sällan fyller i. Inget av dem är obligatoriskt
+  utom traditionen, och den bara för fyra lämningstyper. Att de ligger för sig
+  är därför ingen nedvärdering utan en fördelning av ytan: det man alltid
+  fyller i ska inte behöva samsas med det man sällan gör.</p>
+  <p>Höjden är fördelad efter vad texterna faktiskt väger. Uppmätt i
+  Blekingeuttagets 319 ifyllda traditioner: median 83 tecken, nionde
+  tiondelen 621, längsta 3 759 — traditionen är det enda fält där en lämning
+  kan bära flera stycken. Orienteringen och terrängen ryms däremot på en till
+  två rader nu när de står i full bredd: 82,9 tecken per rad mot 20,5 i den
+  smala spalt de kom ifrån.</p>
+  <p>Antalet flikar är en följd av fältdatorn. Med det virtuella tangentbordet
+  uppe är en fliks synliga yta drygt 200 pixlar, och elva fält på en flik
+  betyder att de flesta ligger under kanten. Färre fält per flik är lättare
+  att arbeta i än fler som ryms på papperet.</p>
+
+  <h3>Varför den ser ut som den gör</h3>
+  <p>Blanketten läses i dagsljus, ofta i motljus, och fylls i med penna. Under
+  bländning överlever bara skillnader i ljushet, inte i kulör. Därav svart
+  text på vitt, tjocka mörka ramar kring det man skriver i, tunna ljusa kring
+  det man läser, och pilrutor breda nog att träffas med penna.</p>
+  <p>Gult betyder att fältet går till Fornreg. Grått är egna anteckningar som
+  stannar i arbetsfilen. Rött är ett krav — och rött används bara där, som
+  ram kring motiveringens påminnelse. Bottnarna bär ingenting: grått mot vitt
+  är 1,18 i kontrast och rosa mot vitt 1,25, osynligt även inomhus. Skillnaden
+  mellan ”fyll i” och ”läs” bärs av ramen, 2 px mörk mot 1 px ljus.</p>
+
+  <h3>Tangentbordet och rullytorna</h3>
+  <p>Det virtuella tangentbordet tar ungefär halva skärmen i liggande läge.
+  Varje flik ligger därför i en rullyta, och blanketten går att dra ihop till
+  den andra halvan — kravet är 302 × 262 logiska pixlar, mot 864 × 612 innan
+  rullytorna fanns. Vågrätt rullar den bara om fönstret görs smalare än
+  blanketten behöver, och bredden är sällan det man saknar i liggande läge.</p>
+
+  <h3>Löpnumret, datumet och stämpeln</h3>
+  <p>Så fort något i blanketten ändras får lämningen dagens datum och nästa
+  lediga löpnummer. En gång per öppnat formulär, så att ett datum du skriver
+  för hand därefter står kvar. Ett nummer som redan står där rörs aldrig — så
+  kan du skriva om det för att lägga en lämning mellan två andra.</p>
+  <p><span class="falt">TID</span> är verktygets primärnyckel: autotexten
+  söker på den, leveranslistan sorteras på den, geometrizippen grupperar på
+  den, och en sammansatt lämnings delar binds till systemet med den. Två
+  lämningar i samma lager med samma nummer är därför ett fel som listan
+  påpekar.</p>
+
+  <h3>Vad blanketten fyller i åt dig</h3>
+  <p>Fyra listrutor har ett utgångsvärde när en ny lämning skapas, och de är
+  Fornregs egna:</p>
+  <div class="tabellyta">
+    <table>
+      <thead>
+        <tr><th>Fält</th><th>Förval</th><th>Källa</th><th>Andel i länet</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Registreringsstatus</td><td>Bekräftad i fält</td><td>s. 37</td><td class="tal">94 %</td></tr>
+        <tr><td>Undersökningsstatus</td><td>Ej undersökt</td><td>s. 45</td><td class="tal">81 %</td></tr>
+        <tr><td>Grad av skada</td><td>Ej skadad</td><td>s. 43</td><td class="tal">67 %</td></tr>
+        <tr><td>Placering</td><td>Synlig ovan mark</td><td>s. 58</td><td class="tal">98 %</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Andelen är hur ofta värdet redan står i länsuttagets egna lämningar.
+  Skadestatusens 67 procent är det svagaste av de fyra, och invändningen är
+  verklig: ett förval som är fel var tredje gång kan accepteras av tröghet.
+  Det står där ändå, för Fornreg gör precis detta — valet flyttas tidigare i
+  kedjan, det uppstår inte.</p>
+  <p>Förvalen gäller <b>bara nyregistrering</b>. QGIS räknar ut ett
+  utgångsvärde när lämningen skapas, så länets egna värden är orörda vid
+  revidering.</p>
+  <p>Lämningsnumret och RAÄ-numret döljs när de är tomma. Fornreg delar ut
+  numret först vid publiceringen, så vid nyregistrering är de två tomma rutor
+  på den flik man arbetar mest i. Vid revidering står de där och säger vilken
+  lämning man har framför sig.</p>
+
+  <h3>Måttet följer typen, inte geometrin</h3>
+  <p>Rapporterat från fält: <i>ett fångstgropssystems mått skrivs inte
+  590x100 m (NÖ–SV) utan ca 640 m (huvudriktning NÖ–SV).</i> Riktigt — och
+  regeln stod redan skriven. Beskrivningsprincipen för Fångstgropssystem
+  börjar <i>”Först anges hela systemets längd och huvudriktning”</i>, och
+  ingen bredd nämns. Knappen läste geometrin i stället för principen och gav
+  ytmått åt allt som råkat ritas som en yta — vilket ett fångstgropssystem
+  alltid gör: <i>”på kartan ritas varje grop in som en punkt, därefter
+  sammanbinds groparna till ett system med en omgivande begränsningslinje.”</i>
+  Geometrin säger alltså ingenting om vilket mått som ska skrivas.</p>
+  <p>Regeln läses nu ur principtexten. Av listans 157 principer säger 96
+  <i>längd×bredd med huvudriktning</i> och 8 längd utan bredd: Drag, Färdväg,
+  Färdvägssystem, Fångstgropssystem, Gravhägnad, Hägnad, Kanal, Vad.</p>
+  <p>Ordet <i>huvudriktning</i> är en egen fråga, och räkningen avgör den. Av
+  476 riktningsparenteser i Exempelsamlingen är 472 bara <i>(NÖ–SV)</i>.
+  Ordet står i fyra, och de tillhör tre typer — Fångstgropssystem, Hägnad,
+  Stridsvärn — alltså där föremålet slingrar sig och riktningen är en
+  huvudsaklig och inte en uppmätt sträckning. Det finns ingen koppling till
+  väderstreckets grovlek: de fyra fördelar sig över fyrstreck, åttastreck och
+  sextonstreck. Verktyget läser därför ordet ur typens egna exempel i stället
+  för att härleda det.</p>
+
+  <h3>Mått ur geometrin</h3>
+  <p>Knappen på beskrivningsraden räknar fram lämningens längd, bredd och
+  längdriktning ur den ritade geometrin och skriver in dem vid markören:
+  <i>65x45 m (N–S)</i> för en yta, <i>210 m l (ÖNÖ–VSV)</i> för en linje.
+  För en punkt är den släckt — en punkt har ingen utsträckning att mäta.</p>
+  <p>Den finns för att måtten på en fäbodvall eller gårdstomt sällan mäts i
+  fält. De skrivs in på kontoret när beskrivningarna putsas, och då står
+  geometrin redan där och bär svaret.</p>
+  <p>Prövat mot länsuttagets egna ytor, räknat mot vad arkeologer skrivit i
+  samma lämnings beskrivning: <i>100x60 (NNV–SSÖ)</i> mot räknade
+  <i>102x68 (NNV–SSÖ)</i>, <i>90x20 (ÖNÖ–VSV)</i> mot <i>92x19</i>,
+  <i>210x80</i> mot <i>212x81</i>. I två fall var det räknade riktigare än
+  det skrivna: <i>V–Ö</i> bryter mot regeln att nordlig eller östlig riktning
+  står först, och en post skrev <i>80x300 m</i> om en yta som är 76x31.</p>
+  <div class="ruta">
+    <h3>Den skriver aldrig över</h3>
+    <p>Texten sätts in vid markören. De fall där räkningen inte stämmer är
+    just de där beskrivningens mått gäller något annat — en husgrund inne i
+    gårdstomten och inte tomten — och det kan verktyget inte veta.</p>
+    <p>Måtten avrundas som arkeologer själva skriver dem: femtal över tjugo
+    meter, hel meter därunder. Ytan är handritad, så metern är falsk
+    precision. Steget väljs av lämningens största mått, annars blir 35x17
+    skrivet med ett tal i femtal och ett på metern.</p>
+  </div>
+
+  <h3>Autotexten</h3>
+  <p>Kryssrutan <i>Fortsätt på samma text</i> vid beskrivningen låter nästa
+  lämning börja med föregåendes text. Arvet sker <b>när lämningstypen väljs</b>
+  och bara från en lämning av samma typ — byter du till fångstgrop efter sex
+  kolbottnar försvinner kolbottentexten. Det du skrivit själv rörs aldrig;
+  bara tomt, eller det verktyget självt satt in, byts ut.</p>
+</section>
+
+<section id="reglerna">
+  <h2>Reglerna</h2>
+  <p>Blanketten tillämpar följdreglerna medan du står vid lämningen. En regel
+  som säger ifrån först vid publiceringen i Fornreg är en regel du får bära
+  hem.</p>
+
+  <h3>Rutan som säger ifrån</h3>
+  <p>Blankettens besked står på fliken Bedömning, i rutan märkt <i>Blanketten
+  säger</i>, direkt under de tre val som kan utlösa dem: bedömning,
+  undersökningsstatus och registreringsstatus. Orsak och besked står ihop, och
+  svaret — motiveringen — står bredvid.</p>
+  <p>Rutan hette <i>Listan säger</i> och satt i en grupp märkt <i>Datering</i>.
+  Bådadera var sant en gång, när den bara bar lämningstypslistans egen text om
+  vilka rekvisit typen kräver. Nu bär den också låset, skadebeskrivningen,
+  traditionen, geometrisorten och medelfelet — och då är det blanketten som
+  säger det, inte listan.</p>
+
+  <h3>När bedömningen faller bort</h3>
+  <p>Sex värden i tre fält gör att lämningen inte kan ha någon antikvarisk
+  bedömning alls. Blanketten sätter då <i>Ingen antikvarisk bedömning</i> och
+  låter den stå: väljer du <i>Fornlämning</i> studsar valet tillbaka.</p>
+  <blockquote>Om en lämning har fått status Helt undersökt, Borttagen utan
+  villkor eller Förstörd tas den antikvariska bedömningen bort av systemet.
+  Lämningen finns inte längre kvar och för fornlämningar har lagskyddet därmed
+  upphört. […] Lämningar som har registreringsstatus Uppgift om lämning, ej
+  bekräftad i fält, Utgår på grund av felregistrering och Överförd till annan
+  lämning kan inte heller ha en antikvarisk bedömning.</blockquote>
+  <p class="etikett">Fornreg 4.0, s. 41</p>
+
+  <h3>Följdreglerna</h3>
+  <dl class="regler">
+    <div class="regel">
+      <dt>Undersökt<br>Skador<br>Registreringsstatus</dt>
+      <dd>De sex värdena ovan sätter <i>Ingen antikvarisk bedömning</i> och
+      hindrar att något annat väljs.</dd>
+      <dd class="kalla"><span class="niva">tolkande</span> Fornreg 4.0, s. 41</dd>
+    </div>
+    <div class="regel">
+      <dt>Förstörd och aldrig publicerad</dt>
+      <dd>Registreringsstatus sätts en gång till <i>Uppgift om lämning, ej
+      bekräftad i fält</i>. En förstörd lämning som aldrig publicerats har
+      aldrig kunnat bekräftas av någon. Ändrar du den efteråt är det ditt val,
+      och det står kvar.</dd>
+      <dd class="kalla"><span class="niva">tolkande</span> Fornreg 4.0, s. 37 och 43</dd>
+    </div>
+    <div class="regel">
+      <dt>Fornlämningsliknande bildning</dt>
+      <dd>Bedömningen sätts till <i>Ej kulturhistorisk lämning</i>, och det
+      värdet kan inte anges för någon annan lämningstyp.</dd>
+      <dd class="kalla"><span class="niva">tolkande</span> Fornreg 4.0, s. 40</dd>
+    </div>
+    <div class="regel">
+      <dt>Möjlig fornlämning</dt>
+      <dd>Förutsätter att lämningen är bekräftad i fält. En uppgift ur en
+      historisk karta, ett bra boplatsläge eller en anomali på en
+      höjddatakarta räknas inte.</dd>
+      <dd class="kalla"><span class="niva">tolkande</span> Fornreg 4.0, s. 40</dd>
+    </div>
+    <div class="regel">
+      <dt>Skadebeskrivning</dt>
+      <dd>Krävs så snart skadan inte är <i>Ej skadad</i>. Regeln är skriven som
+      ett undantag och inte som en uppräkning: <i>Okänd</i> är ingen frisedel
+      utan en observation som också behöver förklaras.</dd>
+      <dd class="kalla"><span class="niva">tolkande</span> Fornreg 4.0, s. 43 · <b>hårt villkor: lämningen går inte att spara utan den</b></dd>
+    </div>
+    <div class="regel">
+      <dt>Tradition</dt>
+      <dd>Obligatorisk för <i>Källa med tradition</i>,
+      <i>Naturföremål/-bildning med bruk, tradition eller namn</i>,
+      <i>Offerkast</i> och <i>Plats med tradition</i> — inte för andra typer.</dd>
+      <dd class="kalla"><span class="niva">tolkande</span> Fornreg 4.0, s. 59</dd>
+    </div>
+    <div class="regel">
+      <dt>Överförd till annan lämning</dt>
+      <dd>Beskrivningen ska säga vart: <i>Överförd till L2018:286.</i> Utan
+      hänvisningen är posten en återvändsgränd.</dd>
+      <dd class="kalla"><span class="niva regional">regional</span> Fälthandbok i arkeologisk inventering 2.0, s. 60</dd>
+    </div>
+    <div class="regel">
+      <dt>Medelfel</dt>
+      <dd>Har ett tak per mätmetod: GPS ±7 m, DGPS ±2 m, RTK ±0,05 m — och
+      aldrig över ±10 m oavsett metod. Ett för stort medelfel är ingen
+      skrivfelsfråga utan en lägesuppgift som inte håller för registret.</dd>
+      <dd class="kalla"><span class="niva regional">regional</span> Fälthandboken 2.0, s. 63 · <span class="niva">tolkande</span> Registreringsmanual för externa aktörer, s. 9</dd>
+    </div>
+    <div class="regel">
+      <dt>Mätmetod</dt>
+      <dd>Ska alltid redovisas. Medelfelet följer av metoden och fylls i av sig
+      självt.</dd>
+      <dd class="kalla"><span class="niva">tolkande</span> Handledning för inventering och dokumentation, s. 34</dd>
+    </div>
+    <div class="regel">
+      <dt>Motivering</dt>
+      <dd>Krävs när lämningstypen kan ha tillkommit både före och efter 1850
+      och bedöms som fornlämning. Årtalet ensamt duger inte som argument —
+      skriv också vad i form, konstruktion, läge eller sammanhang som bär
+      bedömningen.</dd>
+      <dd class="kalla"><span class="niva normerande">normerande</span> KRFS 2022:3 · <span class="niva regional">regional</span> Fälthandboken 2.0, s. 19–20</dd>
+    </div>
+  </dl>
+
+  <div class="ruta">
+    <h3>Varför värdet studsar i stället för att rutan låses</h3>
+    <p>Fornreg tycks stänga av rutan. Här går det inte: QGIS sätter på den
+    igen vid varje uppdatering av formuläret — uppmätt valbar direkt efteråt i
+    samtliga provade fall. Att stänga av en ruta som något annat sätter på är
+    att lova mer än man håller.</p>
+    <p>Värdevakten håller däremot. Väljer du <i>Fornlämning</i> medan en
+    låsande status står kvar skrivs <i>Ingen antikvarisk bedömning</i> tillbaka
+    i samma andetag, både i rutan och i posten.</p>
+  </div>
+</section>
+
+<section id="form">
+  <h2>Beskrivningens form</h2>
+  <p>Leveranslistan granskar texten mot handbokens form. Den påstår aldrig att
+  något är fel i sak.</p>
+  <div class="tabellyta">
+    <table>
+      <thead>
+        <tr><th>Regel</th><th>Anmärks</th><th>Rätt form</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Diameter</td><td><span class="falt">4 m i diam</span></td><td><span class="falt">4 m diam</span>, utan i</td></tr>
+        <tr><td>Uppskattningar</td><td><span class="falt">ca 4</span>, <span class="falt">ett 5-tal</span></td><td>inga uppskattningar under tio</td></tr>
+        <tr><td>Decimaler</td><td><span class="falt">1,456 m</span></td><td>meter anges med 1–2 decimaler</td></tr>
+        <tr><td>Decimaltecken</td><td><span class="falt">1.45 m</span></td><td><span class="falt">1,45 m</span></td></tr>
+        <tr><td>Väderstreck</td><td><span class="falt">NNO</span></td><td>östlig riktning förkortas Ö: <span class="falt">NNÖ</span></td></tr>
+        <tr><td>Axeln</td><td><span class="falt">(NÖ–SSV)</span></td><td>längdriktningen är en axel: mot NÖ står SV</td></tr>
+        <tr><td>Ordningen</td><td><span class="falt">(SÖ–NV)</span></td><td>inleds med nordlig riktning, i andra hand östlig</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Beskrivningen ställs upp enligt längd med längdriktning inom parentes,
+  bredd, höjd eller djup. Längdriktningen anges alltid från nord till syd och
+  från öst till väst.</p>
+  <p class="etikett">Fornreg 4.0, s. 35 · Exempelsamling 1.0</p>
+
+  <div class="ruta">
+    <h3>Två medvetna undantag: gångertecknet och strecket</h3>
+    <p>Räknat i manualerna — och det är där räkningen hör hemma, inte i
+    registret — skriver Exempelsamlingen och lämningstypslistan 528 mått med
+    gångertecknet <i>×</i> och noll med bokstaven <i>x</i>. Av 476 streckpar
+    står 470 med tankstreck <i>–</i>. Fälthandboken visar båda tecknen i sin
+    egen formregel: <i>80×30 m (NNV–SSÖ)</i>.</p>
+    <p>Verktyget skriver ändå <i>85x50 m (N-S)</i>. Skälet är fältdatorn:
+    bokstaven och bindestrecket sitter på tangentbordet, de andra två måste
+    letas fram, och en text som ska kunna rättas för hand i skogen ska inte
+    bära tecken som inte går att skriva där.</p>
+    <p><b>Inläsningen är en annan sak.</b> Kontrollerna godtar alla fyra
+    tecknen, så en text som kommer från Riksantikvarieämbetet med <i>×</i>
+    och <i>–</i> anmärks aldrig på. Undantaget gäller tecknet och inte
+    formen i övrigt: mellanslag omkring strecket anmärks fortfarande, och så
+    gör fel ordning — <i>(S-N)</i> möts av samma besked som <i>(S–N)</i>.</p>
+    <p>Undantaget står i koden och inte i data, eftersom det gäller alla
+    lämningstyper. De typvisa undantagen — <i>bottnens storlek först</i> och
+    de övriga förtydliganden fälthandboken gör till Exempelsamlingens
+    princip — bor i tabellen <span class="falt">beskrivningstillägg</span>,
+    en rad per lämningstyp.</p>
+  </div>
+
+  <div class="ruta">
+    <h3>Avrundningen räknades om</h3>
+    <p>Gränsen för när ett mått slutar vara meningsfullt på metern när var
+    först räknad i Blekingeuttaget — alltså i redan registrerade lämningar,
+    som inte är källa för hur något ska skrivas. Omräknad i manualerna säger
+    de samma sak, och tydligare:</p>
+    <table class="regler">
+      <thead><tr><th>Storlek</th><th>Heltalsmått</th><th>Varav femtal</th></tr></thead>
+      <tbody>
+        <tr><td>under 20 m</td><td>851</td><td>19 %</td></tr>
+        <tr><td>20–99 m</td><td>176</td><td>94 %</td></tr>
+        <tr><td>100 m och mer</td><td>69</td><td>97 %</td></tr>
+      </tbody>
+    </table>
+    <p>Gränsen ligger alltså där Exempelsamlingen själv lägger den. Under
+    tjugo meter är femtalen för grova — en gårdstomt på 12 m är inte 10 — och
+    över den skriver källan knappast något annat än femtal.</p>
+  </div>
+  <div class="ruta">
+    <h3>Tre fält som blandas ihop</h3>
+    <p><b>Orientering</b> är en vägbeskrivning, ingen riktning: avstånd och
+    riktning från fasta, väl synliga föremål i terrängen mot lämningens
+    närmaste kant. Avståndet är fågelvägen.</p>
+    <p><b>Terräng kring lämning</b> skrivs i två led — först läget i terrängen
+    och jordarten, sedan markslag och markanvändning: <i>Krön av flack
+    moränrygg (NÖ–SV). Skogsmark, tallskog.</i> För sluttningar anges det
+    väderstreck det sluttar nedåt.</p>
+    <p><b>Vegetation på lämningen</b> är växtligheten direkt på lämningen,
+    främst träd och buskar, med art och antal. Gräs och mossa anges inte.
+    Fältet är inte obligatoriskt.</p>
+  </div>
+</section>
+
+<section id="geometri">
+  <h2>Geometrin</h2>
+  <h3>Grundregeln är storleken</h3>
+  <p>Under 20 m i diameter: punkt. Över: yta med begränsningslinje. Det är
+  <b>beskrivningens mått</b> som prövas och inte geometrins egen utsträckning —
+  en yta kan vara grovt digitaliserad, men måttet är uppmätt på platsen.
+  Saknar beskrivningen mått sägs ingenting, utom för en yta: den påstår en
+  utbredning som ingen har skrivit ned.</p>
+
+  <h3>Tre typer följer sin egen regel</h3>
+  <dl class="regler">
+    <div class="regel">
+      <dt>Färdväg</dt>
+      <dd>Alltid linje i hela sin sträckning, aldrig område. Vid avbrott i
+      sträckningen ritas ingen linje.</dd>
+      <dd class="kalla"><span class="niva">tolkande</span> Exempelsamling 1.0, s. 87</dd>
+    </div>
+    <div class="regel">
+      <dt>Färdvägssystem</dt>
+      <dd>Minst två färdvägar, och <b>ingen yttre begränsningsyta</b> — bara
+      linjerna. <i>Föreslå ur punkterna</i> vägrar därför rita en yta för
+      typen.</dd>
+      <dd class="kalla"><span class="niva">tolkande</span> Fornreg 4.0, s. 50</dd>
+    </div>
+    <div class="regel">
+      <dt>Gruvhål</dt>
+      <dd>Över 20 m: linje längs gruvhålets kant. Under: punkt. Aldrig yta.
+      Gruvhål ska alltid märkas ut, även när de ingår i ett gruvområde —
+      Lantmäteriet redovisar dem på fastighetskartan på grund av
+      olycksrisken.</dd>
+      <dd class="kalla"><span class="niva">tolkande</span> Fornreg 4.0, s. 51 · Exempelsamling 1.0, s. 110</dd>
+    </div>
+  </dl>
+  <p>Blanketten läser vilket lager du ritat i och säger till när sorten
+  strider mot typen. Den hindrar dig inte — QGIS ritar i det lager du valt —
+  men beskedet står där medan du är kvar på platsen.</p>
+
+  <h3>Praxis, som är något annat än en regel</h3>
+  <p>Utöver reglerna räknas länets egen praxis fram ur uttaget: är den valda
+  geometrisorten ovanlig för lämningstypen? Det är ingen föreskrift och
+  formuleras inte som en, utan som en observation med sina tal. Tre skäl till
+  att en avvikelse kan vara helt riktig förekommer alla: lämningen är mindre
+  än vanligt, ytan är en osäkerhet snarare än en utbredning, eller lämningen
+  ligger vid en fastighetsgräns där yta tillåts oavsett storlek.</p>
+  <p>Underlaget är inte facit. Äldre registreringar bär egna fel, så praxis
+  innehåller en del av det som ska hittas.</p>
+</section>
+
+<section id="sammansatt">
+  <h2>Sammansatta lämningar</h2>
+  <p>Tjugotvå av lämningstypslistans typer är sammansatta, och för tjugoen av
+  dem bär listans egen text både ett antal och ett avstånd. Talen skrivs inte
+  av i koden — de läses ur listan, som varje arbetsmapp bär med sig.</p>
+  <div class="exempel">Gravfält            minst 5 delar, högst 20 m emellan
+Fångstgropssystem   minst 5 delar, 50 m emellan
+Färdvägssystem      minst 2 delar, 20 m emellan, ingen yta
+Blästplats          minst 2 delar, 20 m emellan</div>
+  <p><b>De två talen betyder inte riktigt samma sak.</b> Gravfältets tjugo
+  meter är ett kriterium. Fångstgropssystemets femtio är ett undantag från en
+  underförstådd norm: <i>det inbördes avståndet kan överstiga 50 meter om det
+  av topografin och sammanhanget framgår att groparna hör ihop.</i> Därför bär
+  varje regel med sig meningen talen kommer ur, och den visas för den som ska
+  avgöra — avståndet ställs in per system, inte en gång för alla.</p>
+
+  <h3>Vad som händer</h3>
+  <p>Punkterna kedjas ihop med enkel länkning på det avstånd du valt. Ytan
+  läggs 10 m utanför klungan. Beskrivningen skrivs som ett utkast med måtten
+  sammanslagna ur delarnas egna texter, och systemet ärver delarnas
+  <b>sämsta</b> mätmetod och medelfel — det är den sammantagna kvaliteten som
+  ska redovisas för helheten.</p>
+  <p class="etikett">Fornreg 4.0, s. 56</p>
+  <div class="exempel">Fångstgropssystem, ca 640 m l (huvudriktning N–S), bestående av
+19 fångstgropar, med ett inbördes avstånd av 30–43 m.
+
+[Ur fångstgroparnas egna beskrivningar (19 av 19): 2–5 m diam,
+1–2 m dj. Formen, bottenplanet och vad måtten avser skrivs här.]</div>
+  <p>Läs <i>19 av 19</i>. Står det <i>3 av 19</i> bygger måtten på tre gropar
+  och inte på systemet. Hakparentesen är det du fyller i och sedan tar bort.</p>
+
+  <div class="ruta">
+    <h3>Delarna levereras men står inte i listan</h3>
+    <p>Ingår en fångstgrop i ett system är systemet lämningen. Gropen har ingen
+    egen text att skriva in — men dess geometri hör till systemet och ska
+    levereras, med systemets löpnummer. Fyra lämningar i listan kan alltså bli
+    tio geometrier i zippen.</p>
+    <p>Det gäller inte alla sammansatta typer. I ett boplatsområde ska de
+    enskilda anläggningarna <em>inte</em> få egna geometrier — bara boplatsens
+    kända avgränsning och det som syns ovan mark.</p>
+  </div>
+</section>
+
+<section id="leverans">
+  <h2>Leveransen</h2>
+  <p>Två saker ska in i Fornreg, och de hör ihop genom löpnumret.</p>
+
+  <h3>Leveranslistan</h3>
+  <p>En sida med allt som ändrats sedan uttaget, i den ordning Fornreg frågar
+  efter det, med en sammanräkning av nyregistrerat och reviderat överst. Varje
+  fält har en kopieringsknapp. Rättelser kan skrivas direkt i listan och läsas
+  tillbaka in i arbetsfilen.</p>
+  <p>Urvalet är avtryckets: vad som ändrats avgörs mot det utgångsläge som
+  sparades vid uttaget. Saknas avtrycket går det inte att veta vad du ändrat,
+  och listan vägrar gissa.</p>
+
+  <h3>Geometrizippen</h3>
+  <p>En zip med punkter, linjer och ytor i samma fil, i SWEREF 99 TM. Den bär
+  <b>geometrier och inga attribut</b> — Fornreg lagrar inte attributen ur
+  filen, så texten klistras in ur leveranslistan. De attribut som ändå följer
+  med finns för att du ska se vilken geometri som är vilken i
+  uppladdningslistan, och de bär löpnumret.</p>
+  <p>Fem krav prövas innan filen skrivs, samma som Fornreg prövar vid
+  uppladdningen:</p>
+  <ul>
+    <li>referenssystemet ska vara SWEREF 99 TM (EPSG:3006)</li>
+    <li>koordinaterna ska ha högst tre decimaler</li>
+    <li>ingen lämning får ha dubblerade identiska geometrier</li>
+    <li>ingen linje får korsa sig själv</li>
+    <li>varje objekt måste ha en geometri</li>
+  </ul>
+  <p class="etikett">Fornreg 4.0, s. 47</p>
+  <p>Zippen innehåller <span class="falt">.shp</span>,
+  <span class="falt">.shx</span>, <span class="falt">.dbf</span>,
+  <span class="falt">.prj</span> och <span class="falt">.cpg</span>.
+  Projektionsfilen krävs för valideringen även om shapefile-standarden inte
+  kräver den. Teckenfilen är inte ett av kraven, men den avgör att å, ä och ö
+  läses rätt.</p>
+
+  <h3>Vad återstår, medan man står kvar</h3>
+  <p>Leveranslistan hittar allt som fattas, men den läses på kontoret. Det är
+  för sent för det som bara går att se på platsen: mätmetoden man använde,
+  traditionen någon berättade, geometrisorten man ritade i. Menyvalet
+  <i>Vad återstår?</i> kör samma kontroller på jobbets egna lämningar —
+  de som bär ett löpnummer — och listar dem i löpnummerordning.</p>
+  <p>Skadebeskrivningen står inte i den listan. Den är ett hårt villkor och
+  slipper aldrig igenom.</p>
+
+  <h3>Vad registret redan vet</h3>
+  <p>Länsuttaget bär två tabeller som verktyget länge inte rörde:
+  <span class="falt">egenskap</span> — 17 184 rader i Blekinge — och
+  <span class="falt">ingaendelamning</span>, 1 059. Den första säger vad varje
+  registrerad lämning är i detalj, <i>Typ: Torp</i>; den andra vad en
+  sammansatt lämning består av, <i>13 hägnad, 1 fossil åker</i>.</p>
+  <p>Det var en lucka åt ett håll. Verktyget <b>skapar</b> sammansatta
+  lämningar ur egna punkter och skriver <i>bestående av 19 fångstgropar</i> i
+  utkastet, men läste aldrig motsvarande uppgift för dem som redan finns.
+  Nu står de i rutan <i>Registret</i> på fliken Lämningen — där man arbetar,
+  inte på uppslagsfliken man går till när man vill slå upp något. De visas
+  bara — den som reviderar ska se vad registret säger och själv avgöra om det
+  stämmer med det hen har framför sig. Rutan döljer sig när den är tom:
+  formulärets ytor är det som är ont om, och en tom ruta som upplyser om att
+  den är tom är den sämst använda ytan av alla.</p>
+  <p>Uppmätt i Jämtlandsuttaget: de tre största fångstgropssystemen består av
+  80, 79 och 72 fångstgropar, och alla tre bär beskrivningen <i>Beskrivningen
+  är inte kvalitetssäkrad</i>. Antalet fanns hela tiden i filen.</p>
+
+  <h3>Dubbelregistrering</h3>
+  <p>Uttaget bär länets alla registrerade lämningar, och de har legat oanvända.
+  Står du i skogen och prickar en kolbotten som redan finns i registret kan
+  verktyget inte avgöra saken — men det kan säga att den är där. Frågan ställs
+  bara mot lämningar av <b>samma typ</b>, bara för dem du själv skapat, och
+  inom 20 m.</p>
+  <p>Tjugo meter är ett arbetsmått och kommer inte ur någon källa. Skälet att
+  det är så stort: uttaget bär inte Riksantikvarieämbetets lägesosäkerhet, och
+  äldre registreringar är ofta inmätta med sämre metoder.</p>
+</section>
+
+<section id="kallor">
+  <h2>Källorna</h2>
+  <p>Verktyget vilar på en korpus av 55 dokument, från kulturmiljölagen till
+  länets egen fälthandbok. Varje dokument bär sin nivå, sin version och sitt
+  hämtdatum — det senare svarar på frågan vilken text som gällde när något
+  skrevs.</p>
+  <div class="tabellyta">
+    <table>
+      <thead>
+        <tr><th>Nivå</th><th>Vad det är</th><th>Exempel</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="niva bindande">bindande</span></td><td>lag och förordning</td><td>Kulturmiljölagen (1988:950)</td></tr>
+        <tr><td><span class="niva normerande">normerande</span></td><td>myndighetsföreskrift och allmänna råd</td><td>KRFS 2022:3</td></tr>
+        <tr><td><span class="niva">tolkande</span></td><td>vägledningar, handledningar, lämningstypslistan</td><td>Fornreg 4.0, Exempelsamling 1.0</td></tr>
+        <tr><td><span class="niva regional">regional</span></td><td>länets tillämpning</td><td>Fälthandbok i arkeologisk inventering 2.0</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Manualerna är korrekta — men inte samtidiga</h3>
+  <p>Registrerade lämningar kan innehålla fel; manualerna ska vara riktiga. Men
+  manualer skrivna vid olika tid säger emot varandra, och då gäller den nyare.
+  Tre sådana ställen finns i korpusen, och på alla tre är regeln
+  <b>medvetet inte</b> byggd:</p>
+  <dl class="regler">
+    <div class="regel">
+      <dt>Hällristning<br>Hällmålning</dt>
+      <dd>Exempelsamling 1.0 kräver att den sammansatta typen alltid används,
+      även för en enstaka skålgrop. Lämningstypslista 5.0 har dem inte längre
+      som sammansatta typer — exempelsamlingen speglar den gamla FMIS-listan.</dd>
+      <dd class="kalla">Lista 5.0 gäller</dd>
+    </div>
+    <div class="regel">
+      <dt>Vegetation</dt>
+      <dd>Den äldre inventeringshandledningen kräver att vegetationen alltid
+      anges. Fälthandboken 2.0 och Fornreg 4.0 säger uttryckligen att fältet
+      inte är obligatoriskt.</dd>
+      <dd class="kalla">De nyare gäller</dd>
+    </div>
+    <div class="regel">
+      <dt>Gravfältets delar</dt>
+      <dd>Registreringsmanualen från 2014 förbjuder att komponenterna får
+      geometrier. Fornreg 4.0 tillåter uttryckligen att ett gravfält karteras
+      med alla geometrier kopplade till lämningen.</dd>
+      <dd class="kalla">Fornreg 4.0 gäller</dd>
+    </div>
+  </dl>
+  <p>En besläktad fälla är namnbyten mellan versioner. Handledningen skriver
+  <i>Naturföremål/-bildning med tradition</i>; listan skriver
+  <i>Naturföremål/-bildning med bruk, tradition eller namn</i>. En regel måste
+  skrivas mot listans namn — annars slår den aldrig till, och tystnaden ser ut
+  som att allt är i sin ordning.</p>
+</section>
+
+<section id="granser">
+  <h2>Gränserna</h2>
+  <p>Det finns saker verktyget kunde göra och med flit inte gör.</p>
+  <ul>
+    <li><b>Det bedömer aldrig fornlämningsstatus.</b> Listans praxis visas,
+    rekvisiten räknas upp, motiveringen krävs där den krävs — men vilken
+    bedömning som är riktig avgörs av den som stod på platsen.</li>
+    <li><b>Det hindrar nästan aldrig sparandet.</b> Villkoren i projektet är
+    mjuka på ett undantag när. En blankett som vägrar spara i skogen är en
+    blankett man kringgår, och en bedömning kan mogna på kontoret.
+    Skadebeskrivningen kan den inte: skadan ser man bara på platsen, och den
+    som lämnat den kan inte beskriva den i efterhand. Det villkoret är
+    hårt.</li>
+    <li><b>Det rättar aldrig din text.</b> Anmärkningarna på formen är förslag
+    med källa. Ingen text skrivs om automatiskt.</li>
+    <li><b>Det påstår ingenting om sak.</b> Närhetsfrågan är en fråga,
+    geometripraxis är en observation, och båda lämnar avgörandet.</li>
+    <li><b>Det uppgraderar inte gamla arbetsmappar.</b> Ett uttag är
+    engångsvara.</li>
+  </ul>
+</section>
+
+<footer>
+  <p>Verktyget bygger på Lämningstypslista 5.0 och Exempelsamling 1.0
+  (Riksantikvarieämbetet), Fälthandbok i arkeologisk inventering 2.0 (Jamtli),
+  handledningarna Arbeta med lämningsinformation och Specialfall (Fornreg 4.0)
+  samt KRFS 2022:3. Där de säger något citeras de; där de inte gör det avgör
+  du.</p>
+</footer>
+
+</div>
+</div>

@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<plugins>
+  <pyqgis_plugin name="Fältfångst" version="1.4.7">
+    <description>Fristående tillägg (inte från Riksantikvarieämbetet): hämtar Riksantikvarieämbetets länsuttag över registrerade lämningar och gör i ordning ett fältprojekt med blankett, uppslag och leveranslista inför registreringen i Fornreg.</description>
+    <about>Fristående tillägg, inte från Riksantikvarieämbetet eller någon annan myndighet. Betaversion. Väljer län, hämtar uttaget över registrerade lämningar, bygger ut det och öppnar projektet. Blanketten slår upp beskrivningsprincip och exempel för vald lämningstyp, och leveranslistan visar vad jobbet ändrat i den ordning Fornreg frågar efter det. Hör ihop med pluginet Arkeologiskt inventeringsunderlag. Den som har en äldre Fältfångst installerad under mappnamnet arkstod_falt ska avinstallera den först.</about>
+    <version>1.4.7</version>
+    <qgis_minimum_version>3.40</qgis_minimum_version>
+    <qgis_maximum_version>4.99</qgis_maximum_version>
+    <homepage>https://github.com/kaje-home/faltfangst</homepage>
+    <file_name>faltfangst.zip</file_name>
+    <author_name>Karl-Johan Olofsson</author_name>
+    <download_url>https://github.com/kaje-home/faltfangst/releases/download/v1.4.7/faltfangst.zip</download_url>
+    <uploaded_by>kaje-home</uploaded_by>
+    <create_date>2026-11-11</create_date>
+    <update_date>2026-11-11</update_date>
+    <experimental>True</experimental>
+    <deprecated>False</deprecated>
+    <tracker>https://github.com/kaje-home/faltfangst/issues</tracker>
+    <repository>https://github.com/kaje-home/faltfangst</repository>
+    <tags>archaeology,sweden,arkeologi,inventering,utredning,fornlämningar,kulturmiljöregistret,KMR,fornreg,fornsök,riksantikvarieämbetet,fältarbete</tags>
+  </pyqgis_plugin>
+</plugins>
