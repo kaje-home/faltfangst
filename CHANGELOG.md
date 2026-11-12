@@ -2,7 +2,7 @@
 
 Version 1.4.7 är den första som ges ut offentligt. De tidigare delades som zip mellan kollegor. Till och med version 1.3.0 hette pluginet **Lämningsdatabas**, och till och med 1.4.6 hette pluginmappen `arkstod_falt`.
 
-## 1.4.7 (2026-11-11)
+## 1.4.7 (2026-11-12)
 
 **Den som har en äldre Fältfångst (`arkstod_falt`) installerad ska avinstallera den först.** De två är samma plugin och kan inte vara installerade samtidigt: båda lägger samma kod på QGIS sökväg, och den som laddas först vinner. Avinstallera `arkstod_falt`, starta om QGIS och installera sedan den här. Arbetsmappar och inställningar fungerar som förut.
 

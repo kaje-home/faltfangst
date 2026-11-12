@@ -18,7 +18,7 @@ email=kaje@bahnhof.se
 tracker=https://github.com/kaje-home/faltfangst/issues
 repository=https://github.com/kaje-home/faltfangst
 homepage=https://github.com/kaje-home/faltfangst
-changelog=1.4.7 (2026-11-11)
+changelog=1.4.7 (2026-11-12)
     - Första offentliga utgåvan. Pluginmappen heter faltfangst (hette arkstod_falt). Avinstallera den gamla först; arbetsmappar och inställningar fungerar som förut.
     - Fungerar i QGIS 4 (Qt 6). Kräver QGIS 3.40 eller nyare.
     - Ett nytt uttag öppnar zoomat till det valda länets lämningar.
