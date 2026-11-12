@@ -326,13 +326,23 @@ def _visa_i_utforskaren(fil) -> None:
     Rapporterat fran falt: "utforskaren oppnar projektfoldern men det finns
     ingen sparaknapp".
     """
-    import subprocess
     import sys as systemet
 
     fil = str(fil)
     if systemet.platform.startswith("win"):
-        # Explorers egen form: /select och sokvagen som ett enda argument.
-        subprocess.Popen(["explorer", f"/select,{fil}"])
+        # Explorer vill ha citattecknen EFTER kommat: /select,"C:\en mapp\fil".
+        # Citeras hela argumentet -- "/select,C:\en mapp\fil", vilket en
+        # argumentlista till subprocess eller QProcess blir sa fort sokvagen
+        # har ett mellanslag -- forstar Explorer det inte och oppnar Dokument
+        # i stallet. Arbetsmappar har alltid mellanslag i namnet, sa filen
+        # blev i praktiken aldrig markerad.
+        #
+        # os.startfile lamnar argumenten ordagrant till Windows, och lamnar
+        # inget processobjekt efter sig. Med subprocess.Popen blev ett kvar
+        # som ingen vantade pa, och Python skrev "ResourceWarning: subprocess
+        # is still running" i loggen. QProcess.setNativeArguments hade gjort
+        # samma sak men finns inte i Qt 5:s Python-bindningar.
+        os.startfile("explorer.exe", "open", f'/select,"{fil}"')
         return
     QDesktopServices.openUrl(QUrl.fromLocalFile(str(Path(fil).parent)))
 

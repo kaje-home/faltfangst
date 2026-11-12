@@ -27,6 +27,7 @@ from datetime import date
 from pathlib import Path
 
 from arkstod.faltdel import utgangslage as utgangslagesmodul
+from arkstod.faltdel.formular import QGIS_NULL
 from arkstod.faltdel.motivering import vilar_bara_pa_arstalet
 from arkstod.faltdel.kontroller import (
     granska_narhet,
@@ -582,6 +583,10 @@ def _rutan(falt: Falt, varde: str, val: list[str] | None) -> str:
 
     rader = ['<option value=""></option>']
     for ett in val:
+        # QGIS platshaallare for "inget varde" ar inget val. Listorna rensas
+        # redan dar de lases; har halls den ute aven om nagon skickar in den.
+        if ett == QGIS_NULL:
+            continue
         vald = " selected" if ett == varde else ""
         rader.append(f'<option{vald}>{html.escape(ett)}</option>')
     if varde and varde not in val:

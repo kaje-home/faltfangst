@@ -909,6 +909,12 @@ def valjbara_varden(qgz: Path | str) -> dict[str, list[str]]:
 
     Ordningen bevaras: den ar satt i VARDEORDNING och ska se likadan ut var
     an varden valjs.
+
+    **QGIS platshaallare for "inget varde" ar inget varde.** Typlistan borjar
+    med en tom rad, och i projektfilen staar den som QGIS_NULL -- en GUID.
+    Den raknas inte hit: leveranslistan visade den som ett eget val i
+    rullistan for lamningstyp, och en rattelse hade kunnat skriva GUID:en
+    som lamningstyp i arbetsfilen. Tomt valjs med den tomma raden.
     """
     from arkstod.faltdel.projekt import las_projektfil
 
@@ -924,6 +930,7 @@ def valjbara_varden(qgz: Path | str) -> dict[str, list[str]]:
             match.group(1)
             for post in _VARDEPOST.finditer(block)
             if (match := _VARDET.search(post.group(0)))
+            and match.group(1) != QGIS_NULL
         ]
         if varden:
             listor[falt] = varden

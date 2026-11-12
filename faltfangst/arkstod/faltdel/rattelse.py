@@ -33,6 +33,8 @@ import sqlite3
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from arkstod.faltdel.formular import QGIS_NULL
+
 FILNAMN = "leveransandringar.json"
 
 
@@ -139,6 +141,15 @@ def tillampa(gpkg: Path | str, andringar: list[Andring]) -> Rattelserapport:
                 continue
             if not _finns_tabell(anslutning, andring.tabell):
                 rapport.hoppade.append((andring, "tabellen finns inte i arbetsfilen"))
+                continue
+            # QGIS platshaallare for "inget varde". En leveranslista skriven
+            # fore 1.4.7 hade den som ett val i rullistan for lamningstyp, och
+            # en sadan lista kan ligga kvar. Den skrivs aldrig, vad listorna
+            # an sager och aven nar inget projekt finns att prova mot.
+            if andring.till.strip() == QGIS_NULL:
+                rapport.hoppade.append(
+                    (andring, "värdet är QGIS platshållare för tomt, inget värde")
+                )
                 continue
 
             val = listor.get(andring.kolumn)

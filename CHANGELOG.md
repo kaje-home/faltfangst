@@ -11,10 +11,14 @@ Version 1.4.7 är den första som ges ut offentligt. De tidigare delades som zip
 - **Fungerar i QGIS 4 (Qt 6).** I QGIS 4 gick uttagsdialogen inte att öppna. Resten av pluginet behövde inte ändras. Pluginet kräver nu QGIS 3.40 eller nyare; äldre versioner är inte prövade.
 - **Ett nytt uttag öppnar zoomat till länets lämningar.** Förut öppnade varje uttag över samma ruta i Härjedalen, oavsett län, och kartan såg tom ut tills man zoomade till lagren. Med grannlän visas båda länen.
 - **Mallprojektet bär inte längre namnet på den som sparade det.** Namnet följde förut med till varje arbetsmapp.
+- **Rättat: leveranslistans rullista för lämningstyp** hade ett val som inte var en lämningstyp utan QGIS interna platshållare för tomt värde, `{2839923C-…}`. Den är borta ur listan, och en rättelse som bär den skrivs aldrig in i arbetsfilen. Tomt väljs med den tomma raden.
+- **Rättat: systemets längd.** Utkastet till beskrivning och knappen *Mått ur geometrin* gav olika längd för samma fångstgropssystem, till exempel 126 och 145 m. Knappen mätte ytan, som ritas tio meter utanför groparna. Nu räknar båda på groparna, eftersom principen säger "hela systemets längd", och båda skriver längden i femtal: "ca 125 m l".
+- **Rättat:** utkastet skrev "inbördes avstånd av 32–32 m" när alla avstånd var lika. Nu står det "32 m".
+- **Rättat: *Geometrier till Fornreg* markerar zippen i Utforskaren.** När arbetsmappens namn hade ett mellanslag, vilket det alltid har, öppnades mappen Dokument i stället. En varning i loggen om en process som fortfarande kördes är också borta.
 - **Fristående tillägg.** Beskrivningen säger uttryckligen att pluginet inte kommer från Riksantikvarieämbetet.
 - **Bruksanvisningen** säger hur pluginet hämtas från GitHub. Skärmbilden av fliken Administrativt är omgjord.
 - Stilmallens generator (`palett.py`) följer inte längre med. Den används bara när blanketten byggs.
-- Provat utan gränssnitt i QGIS 3.44.14 och 4.2.3: pluginet laddar, ett uttag för Jämtland går igenom, projektet öppnar, blanketten byggs för punkt, linje och yta, och leveranslistan skrivs.
+- Provat utan gränssnitt i QGIS 3.44.14 och 4.2.3: pluginet laddar, ett uttag för Jämtland går igenom, projektet öppnar, blanketten byggs för punkt, linje och yta, ett fångstgropssystem skapas ur punkterna, och leveranslistan skrivs. Provat i QGIS-fönstret i 3.44.14.
 
 ## 1.4.6 (2026-09-24)
 

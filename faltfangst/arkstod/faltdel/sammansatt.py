@@ -48,7 +48,7 @@ import math
 import re
 from dataclasses import dataclass, field
 
-from arkstod.faltdel.mattregel import axel
+from arkstod.faltdel.mattregel import axel, langdmatt
 
 @dataclass(frozen=True)
 class Regel:
@@ -213,6 +213,11 @@ class Matt:
     riktning: str
     minsta_avstand: int
     storsta_avstand: int
+    # Samma tva uppgifter som `langd` och `riktning`, oavrundade. Texten
+    # skrivs ur dem -- se `langdtext` -- sa att avrundningen gors pa ett
+    # stalle och inte en gaang har och en gaang dar.
+    utstrackning: float = 0.0
+    barning: float = 0.0
 
 
 @dataclass
@@ -312,13 +317,42 @@ def mat(klunga: list[Punkt]) -> Matt:
     lutning = math.radians(90 - barning)
     langs = [p.x * math.cos(lutning) + p.y * math.sin(lutning) for p in klunga]
     avstand = [round(a.till(b)) for a, b in kanter(klunga)] or [0]
+    utstrackning = max(langs) - min(langs)
     return Matt(
         antal=len(klunga),
-        langd=round(max(langs) - min(langs)),
+        langd=round(utstrackning),
         riktning=riktning,
         minsta_avstand=min(avstand),
         storsta_avstand=max(avstand),
+        utstrackning=utstrackning,
+        barning=barning,
     )
+
+
+def langdtext(matt: Matt) -> str:
+    """Systemets langd som den skrivs: "ca 125 m l (huvudriktning N–S)".
+
+    **Langden ar delarnas utstrackning, inte ytans.** Principen sager "forst
+    anges hela systemets langd och huvudriktning", och begransningslinjen ar
+    nagot som ritas *kring* groparna pa kartan. Hur brett den ritas sager
+    kallan inte; marginalen ar ett arbetsmatt. Ett matt taget pa ytan blir
+    darfor tva marginaler for langt -- 145 m dar groparna stracker sig 126.
+
+    Bade utkastet och knappen Matt ur geometrin skriver med den har
+    funktionen. Forr raknade de var for sig, pa var sin sak och med var sin
+    avrundning, och gav olika langd for samma system.
+    """
+    return langdmatt(matt.utstrackning or matt.langd, matt.barning, True)
+
+
+def avstandstext(matt: Matt) -> str:
+    """Delarnas inbordes avstand: "30–43 m", eller "32 m" nar alla ar lika.
+
+    Ett spann med samma tal i bada andar -- "32–32 m" -- ar inget spann.
+    """
+    if matt.minsta_avstand == matt.storsta_avstand:
+        return f"{matt.minsta_avstand} m"
+    return f"{matt.minsta_avstand}–{matt.storsta_avstand} m"
 
 
 # Mattorden som falthandboken och exempelsamlingen anvander. Ordningen ar
@@ -437,10 +471,8 @@ def beskrivningsutkast(matt: Matt, regel: Regel, texter=None, punkter=None) -> s
     # boja saakert, och "fangstgropars" ar inte svenska.
     ordet = _ordet_for_delarna(punkter or [], regel)
     stycken = [
-        f"{regel.sammansatt}, ca {matt.langd} m l"
-        f" (huvudriktning {matt.riktning}), bestående av {matt.antal}"
-        f" {ordet}, med ett inbördes avstånd av"
-        f" {matt.minsta_avstand}–{matt.storsta_avstand} m."
+        f"{regel.sammansatt}, {langdtext(matt)}, bestående av {matt.antal}"
+        f" {ordet}, med ett inbördes avstånd av {avstandstext(matt)}."
     ]
 
     spann, lasta = matt_ur_beskrivningar(texter or [])
