@@ -2,6 +2,8 @@
 
 Ett QGIS-plugin för arkeologisk inventering och utredning. Det hämtar Riksantikvarieämbetets uttag över registrerade lämningar för ett län och gör i ordning ett fältprojekt: en lämningsdatabas, en blankett som öppnas när du prickar en lämning, och en leveranslista inför registreringen i Fornreg.
 
+![Fångstgropssystemet Ström 206:1 ur Riksantikvarieämbetets register över en skuggbild, och blanketten för samma lämning](docs/karta_och_blankett.jpg)
+
 Pluginet är ett fristående tillägg. Det kommer inte från Riksantikvarieämbetet eller någon annan myndighet.
 
 **Det räknar och det föreslår. Det avgör aldrig.** Antal, avstånd, mått och datum sköter verktyget. Om en lämning är en fornlämning, om fem gropar bildar ett system och om en beskrivning stämmer avgör du som var på platsen.
