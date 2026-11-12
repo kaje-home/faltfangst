@@ -205,13 +205,19 @@ def skapa(punktlager, ytlager, kandidat, regel, marginal=sammansatt.MARGINAL) ->
         )
 
     post = QgsFeature(ytlager.fields())
-    post.setGeometry(yta(kandidat, marginal))
+    geometri = yta(kandidat, marginal)
+    post.setGeometry(geometri)
     post[TYPFALT] = regel.sammansatt
     post["beskrivning"] = sammansatt.beskrivningsutkast(
         kandidat.matt,
         regel,
         _beskrivningar(punktlager, kandidat.punkter),
         kandidat.punkter,
+        # Langden ar ytans, raknad med samma funktion som knappen Matt ur
+        # geometrin. Systemet ar den avgransade ytan, marginalen inraknad.
+        storlek=blankettkod.matt_for_lamningen(
+            ytlager, geometri, "polygon", regel.sammansatt
+        ),
     )
     nummer = blankettkod.nasta_lopnummer(ytlager)
     post["TID"] = nummer

@@ -330,17 +330,13 @@ def mat(klunga: list[Punkt]) -> Matt:
 
 
 def langdtext(matt: Matt) -> str:
-    """Systemets langd som den skrivs: "ca 125 m l (huvudriktning N–S)".
+    """Delarnas utstrackning som text: "ca 125 m l (huvudriktning N–S)".
 
-    **Langden ar delarnas utstrackning, inte ytans.** Principen sager "forst
-    anges hela systemets langd och huvudriktning", och begransningslinjen ar
-    nagot som ritas *kring* groparna pa kartan. Hur brett den ritas sager
-    kallan inte; marginalen ar ett arbetsmatt. Ett matt taget pa ytan blir
-    darfor tva marginaler for langt -- 145 m dar groparna stracker sig 126.
-
-    Bade utkastet och knappen Matt ur geometrin skriver med den har
-    funktionen. Forr raknade de var for sig, pa var sin sak och med var sin
-    avrundning, och gav olika langd for samma system.
+    **Det har ar inte systemets langd nar det finns en yta.** Systemet ar den
+    avgransade ytan, och dess langd mats pa ytan -- se
+    `blankettkod.matt_for_lamningen`, som bade utkastet och knappen Matt ur
+    geometrin skriver med. Den har funktionen raknar mellan de yttersta
+    delarna och ar reserven for den som bygger ett utkast utan yta.
     """
     return langdmatt(matt.utstrackning or matt.langd, matt.barning, True)
 
@@ -452,8 +448,14 @@ def _ordet_for_delarna(punkter, regel: Regel) -> str:
     return "lämningar"
 
 
-def beskrivningsutkast(matt: Matt, regel: Regel, texter=None, punkter=None) -> str:
+def beskrivningsutkast(
+    matt: Matt, regel: Regel, texter=None, punkter=None, storlek: str | None = None
+) -> str:
     """Beskrivningens matbara borjan, i listans egen ordning.
+
+    `storlek` ar ytans matt, fardigskrivet -- "ca 145 m l (huvudriktning
+    N–S)". Det raknas dar ytan finns, pa ytan sjalv, sa att texten och
+    kartan sager samma sak. Utan det skrivs delarnas utstrackning.
 
     Forsta stycket ar de fyra uppgifter beskrivningsprincipen borjar med.
     Andra stycket ar delarnas egna matt, sammanslagna -- de staar redan
@@ -471,7 +473,8 @@ def beskrivningsutkast(matt: Matt, regel: Regel, texter=None, punkter=None) -> s
     # boja saakert, och "fangstgropars" ar inte svenska.
     ordet = _ordet_for_delarna(punkter or [], regel)
     stycken = [
-        f"{regel.sammansatt}, {langdtext(matt)}, bestående av {matt.antal}"
+        f"{regel.sammansatt}, {storlek or langdtext(matt)},"
+        f" bestående av {matt.antal}"
         f" {ordet}, med ett inbördes avstånd av {avstandstext(matt)}."
     ]
 

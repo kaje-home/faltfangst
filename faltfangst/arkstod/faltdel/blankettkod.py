@@ -1204,70 +1204,22 @@ def matt_ur_geometrin(
     return ytmatt(langd, kort, barning)
 
 
-def _punktlagret(lager):
-    """Punktlagret i samma arbetsfil som `lager`, eller None."""
-    from qgis.core import QgsProject
+def matt_for_lamningen(lager, geometri, sorten: str, lamningstyp) -> str:
+    """Mattet som knappen Matt ur geometrin skriver, for typen och geometrin.
 
-    def arbetsfil(ett_lager) -> str:
-        try:
-            return ett_lager.dataProvider().dataSourceUri().split("|")[0]
-        except AttributeError:
-            return ""
+    **En sammansatt lamnings langd ar ytans.** Ett fangstgropssystem ar den
+    avgransade ytan, som ocksa tacker marken mellan groparna -- sa textens
+    langd och ytans langd ska vara samma tal. Systemutkastet skriver darfor
+    sitt matt med just den har funktionen, pa ytan det skapat, och knappen
+    skriver det pa ytan som den ser ut nu, aven om nagon ritat om den.
 
-    kandidater = QgsProject.instance().mapLayersByName("point")
-    samma = [k for k in kandidater if arbetsfil(k) == arbetsfil(lager)]
-    return (samma or kandidater or [None])[0]
-
-
-def matt_ur_delarna(lager, posten, lamningstyp) -> str:
-    """En sammansatt lamnings langd, raknad ur dess delar. Tom om den inga har.
-
-    Ett fangstgropssystem ritas som en yta, och ytan laggs en bit utanfor
-    groparna. Mats langden pa ytan blir den tva marginaler for lang:
-    rapporterat fran provet infor 1.4.7 gav utkastet 126 m och knappen 145 m
-    for samma system. Principen sager "hela systemets langd", och systemet
-    ar groparna -- begransningslinjen ar ritad kring dem. Darfor raknas
-    langden har ur delarna, med samma funktion som skriver utkastet, och
-    ytans matt anvands bara nar ytan inte har nagra delar att rakna pa.
-
-    Delarna ar punkterna som bar ytans lopnummer i `ingar_i`.
+    Infor 1.4.7 raknade utkastet i stallet mellan de yttersta groparna och
+    gav 126 m dar knappen gav 145 m for samma system. Ett forsta forsok att
+    fa dem lika lat bada rakna pa groparna; det ar andrat, efter beslut, sa
+    att bada raknar pa ytan.
     """
-    from qgis.core import QgsFeatureRequest
-
-    from arkstod.faltdel import sammansatt, systemyta
-
-    try:
-        nummer = int(falt(posten, LOPNUMMER))
-    except (TypeError, ValueError):
-        return ""
-    punktlager = _punktlagret(lager)
-    if punktlager is None or punktlager.fields().indexOf(systemyta.INGAR_I) < 0:
-        return ""
-
-    # Bara de typer listan sager att den sammansatta bestar av. Lopnumret
-    # ensamt racker inte som nyckel om nagon skrivit i faltet for hand.
-    try:
-        regel = systemyta.regler_for_arbetsfilen(punktlager).get(str(lamningstyp))
-    except Exception:  # noqa: BLE001  (en aldre arbetsfil utan listan)
-        regel = None
-
-    begaran = QgsFeatureRequest()
-    begaran.setFilterExpression(f'"{systemyta.INGAR_I}" = {nummer}')
-    punkter = []
-    for post in punktlager.getFeatures(begaran):
-        typ = falt(post, systemyta.TYPFALT) or ""
-        if regel is not None and typ not in regel.ingaende:
-            continue
-        geometri = post.geometry()
-        if geometri is None or geometri.isEmpty():
-            continue
-        mitt = geometri.centroid().asPoint()
-        punkter.append(
-            sammansatt.Punkt(fid=post.id(), x=mitt.x(), y=mitt.y(), typ=str(typ))
-        )
-    if len(punkter) < 2:
-        return ""
-    return sammansatt.langdtext(sammansatt.mat(punkter))
+    langdform, huvudriktning = mattformen(lager, lamningstyp)
+    return matt_ur_geometrin(geometri, sorten, langdform, huvudriktning)
 
 
 def _koppla_mattknappen(dialog, lager, posten) -> None:
@@ -1298,22 +1250,13 @@ def _koppla_mattknappen(dialog, lager, posten) -> None:
 
     def skriv_in():
         try:
-            aktuell = dialog.currentFormFeature()
-            geometri = aktuell.geometry()
+            geometri = dialog.currentFormFeature().geometry()
         except (AttributeError, RuntimeError):
-            aktuell = posten
             geometri = falt(posten, "geometri")
         # Listrutan forst: den bar det val man just gjort, aven innan
         # posten skrivits om.
         typen = _valet(dialog, "lamningstyp") or falt(posten, "lamningstyp")
-        langdform, huvudriktning = mattformen(lager, typen)
-        text = ""
-        if langdform and sorten == "polygon":
-            # En sammansatt lamning mats pa sina delar, inte pa ytan som
-            # ritats kring dem. Se matt_ur_delarna.
-            text = matt_ur_delarna(lager, aktuell, typen)
-        if not text:
-            text = matt_ur_geometrin(geometri, sorten, langdform, huvudriktning)
+        text = matt_for_lamningen(lager, geometri, sorten, typen)
         ruta = dialog.findChild(QPlainTextEdit, BESKRIVNING)
         if not text or ruta is None:
             return

@@ -62,7 +62,10 @@ class Uppslag:
 class Bok:
     gpkg: Path
     listversion: str = ""
+    # Dagen uttaget gjordes, och dagen lamningstypslistan hamtades. De
+    # forvaxlades forr: rubriken skrev listans datum som uttagets.
     uttagsdatum: str = ""
+    listdatum: str = ""
     uppslag: list[Uppslag] = field(default_factory=list)
 
 
@@ -111,12 +114,12 @@ def bok(gpkg: Path | str) -> Bok:
         resultat = Bok(gpkg)
 
         if _finns(anslutning, "ark_modell"):
-            rad = anslutning.execute(
-                "SELECT listversion, hamtdatum FROM ark_modell LIMIT 1"
-            ).fetchone()
-            if rad:
-                resultat.listversion = _text(rad["listversion"])
-                resultat.uttagsdatum = _text(rad["hamtdatum"])
+            from arkstod.faltdel.utgangslage import uttagsuppgifter
+
+            uppgifter = uttagsuppgifter(anslutning)
+            resultat.listversion = uppgifter.listversion
+            resultat.uttagsdatum = uppgifter.datum
+            resultat.listdatum = uppgifter.listdatum
 
         anvisningar = {}
         if _finns(anslutning, "ark_anvisning"):
@@ -246,6 +249,7 @@ def html_sida(bokens: Bok) -> str:
         antal=len(bokens.uppslag),
         listversion=html.escape(bokens.listversion or "5.0"),
         uttagsdatum=html.escape(bokens.uttagsdatum or "okänt"),
+        listdatum=html.escape(bokens.listdatum or "okänt"),
         skapad=date.today().isoformat(),
         uppslag="\n".join(_uppslag_html(ett) for ett in bokens.uppslag),
     )
@@ -362,7 +366,7 @@ _MALL = """<!doctype html>
 <header>
   <div class="topp">
     <h1>Uppslagsbok — Lämningstypslistan {listversion}</h1>
-    <span class="stampel">{antal} lämningstyper · uttag {uttagsdatum} · skriven {skapad}</span>
+    <span class="stampel">{antal} lämningstyper · listan hämtad {listdatum} · uttag {uttagsdatum} · skriven {skapad}</span>
   </div>
   <input id="sok" type="search" placeholder="Sök lämningstyp eller ord i texten…"
          autocomplete="off" autofocus>

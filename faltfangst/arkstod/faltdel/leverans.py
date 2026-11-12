@@ -168,7 +168,11 @@ class Sammanrakning:
 @dataclass
 class Leveransrapport:
     gpkg: Path
+    # Dagen uttaget gjordes -- inte dagen lamningstypslistan hamtades, som
+    # staar i `listdatum`. Se utgangslage.Uttagsuppgifter.
     uttagsdatum: str = ""
+    listversion: str = ""
+    listdatum: str = ""
     poster: list[Post] = field(default_factory=list)
     # Lamningar som blivit delar av en sammansatt lamning. Inte i listan --
     # men deras geometrier ska levereras med systemet.
@@ -401,15 +405,10 @@ def leverans(gpkg: Path | str) -> Leveransrapport:
     anslutning = sqlite3.connect(f"file:{gpkg}?mode=ro", uri=True)
     try:
         rapport = Leveransrapport(gpkg=gpkg)
-        try:
-            rapport.uttagsdatum = (
-                anslutning.execute(
-                    "SELECT hamtdatum FROM ark_modell LIMIT 1"
-                ).fetchone()
-                or ("",)
-            )[0]
-        except sqlite3.OperationalError:
-            pass
+        uppgifter = utgangslagesmodul.uttagsuppgifter(anslutning)
+        rapport.uttagsdatum = uppgifter.datum
+        rapport.listversion = uppgifter.listversion
+        rapport.listdatum = uppgifter.listdatum
 
         if not utgangslagesmodul.finns(anslutning):
             raise SaknarUtgangslage(
@@ -760,10 +759,21 @@ def html_sida(
         antal=rapport.antal,
         sammanrakning=_sammanrakning_html(rapport),
         uttagsdatum=html.escape(rapport.uttagsdatum or "okänt"),
+        listan=html.escape(_listans_stampel(rapport)),
         skapad=date.today().isoformat(),
         nyckel=html.escape(f"leverans:{namn}"),
         avsnitt="\n".join(avsnitt),
     )
+
+
+def _listans_stampel(rapport: Leveransrapport) -> str:
+    """ "lämningstypslistan 5.0 (hämtad 2026-08-20)", eller tomt om okant."""
+    if not rapport.listversion:
+        return ""
+    text = f" · lämningstypslistan {rapport.listversion}"
+    if rapport.listdatum:
+        text += f" (hämtad {rapport.listdatum})"
+    return text
 
 
 def skriv(gpkg: Path | str, jobbnamn: str = "") -> Path:

@@ -244,3 +244,75 @@ def skriv(gpkg: Path | str) -> Utgangslagesrapport:
         return rapport
     finally:
         anslutning.close()
+
+
+@dataclass
+class Uttagsuppgifter:
+    """Nar uttaget gjordes, och vilken lamningstypslista det bar.
+
+    Tva olika datum, och de har forvaxlats: leveranslistans rubrik skrev
+    "uttag ur RAA 2026-08-20" for ett uttag gjort 2026-11-12. Det forsta var
+    dagen lamningstypslistan hamtades till verktyget -- samma i varje uttag
+    tills listan byts -- och inte dagen lamningarna hamtades fran RAA.
+    """
+
+    # Dagen arbetsmappen gjordes, i datorns egen tid.
+    datum: str = ""
+    listversion: str = ""
+    # Dagen lamningstypslistan hamtades. Sager vilken text verktyget svarar
+    # utifran, inte hur farsk lamningarna ar.
+    listdatum: str = ""
+
+
+def _lokal_dag(stampel: str) -> str:
+    """Dagen i en UTC-stampel, som den heter dar datorn staar.
+
+    `inskriven` skrivs i UTC. Ett uttag gjort halv ett pa natten svensk tid
+    bar da gardagens datum, och det ar inte dagen den som gjorde uttaget
+    minns.
+    """
+    from datetime import datetime, timezone
+
+    try:
+        tid = datetime.strptime(str(stampel)[:19], "%Y-%m-%dT%H:%M:%S")
+    except ValueError:
+        return ""
+    return tid.replace(tzinfo=timezone.utc).astimezone().date().isoformat()
+
+
+def uttagsuppgifter(anslutning: sqlite3.Connection) -> Uttagsuppgifter:
+    """Laeser uttagets datum och listans version ur arbetsfilen.
+
+    Uttagets datum ar nar uppslagstabellerna skrevs in, `ark_modell.inskriven`
+    -- det gors nar arbetsmappen skapas. Saknas den tas det senaste
+    `uttagsdatum` RAA sjalv satt pa lamningarna.
+    """
+    uppgifter = Uttagsuppgifter()
+    try:
+        rad = anslutning.execute(
+            "SELECT listversion, hamtdatum, inskriven FROM ark_modell LIMIT 1"
+        ).fetchone()
+    except sqlite3.OperationalError:
+        try:
+            rad = anslutning.execute(
+                "SELECT listversion, hamtdatum, NULL FROM ark_modell LIMIT 1"
+            ).fetchone()
+        except sqlite3.OperationalError:
+            rad = None
+    if rad:
+        uppgifter.listversion = str(rad[0] or "").strip()
+        uppgifter.listdatum = str(rad[1] or "").strip()
+        uppgifter.datum = _lokal_dag(rad[2] or "")
+
+    if not uppgifter.datum:
+        senaste = ""
+        for tabell in geometritabeller(anslutning):
+            try:
+                varde = anslutning.execute(
+                    f'SELECT max(uttagsdatum) FROM "{tabell}"'
+                ).fetchone()[0]
+            except sqlite3.OperationalError:
+                continue
+            senaste = max(senaste, str(varde or "")[:10])
+        uppgifter.datum = senaste
+    return uppgifter
